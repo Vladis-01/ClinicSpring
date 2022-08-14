@@ -2,6 +2,7 @@ package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.Enums.Status;
 import com.example.veterinaryclinic.spring.models.AppointmentModel;
+import com.example.veterinaryclinic.spring.models.DoctorModel;
 import com.example.veterinaryclinic.spring.models.FolderModel;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
@@ -81,11 +82,11 @@ public class AppoimentController {
                 statuses.put(status, true);
             }
         }
-        HashMap doctors = (HashMap) Stream.of(doctorRepo.findAll()).collect(Collectors.toMap(e -> e, e -> false));
+        HashMap doctors = (HashMap) Stream.of(doctorRepo.findAll().toArray()).collect(Collectors.toMap(e -> e, e -> false));
         if(appoimentModel.getDoctorModel() != null) {
             doctors.put(appoimentModel.getDoctorModel(), true);
         }
-        HashMap patients = (HashMap) Stream.of(patientRepo.findAll()).collect(Collectors.toMap(e -> e, e -> false));
+        HashMap patients = (HashMap) Stream.of(patientRepo.findAll().toArray()).collect(Collectors.toMap(e -> e, e -> false));
         if(appoimentModel.getPatientModel() != null) {
             patients.put(appoimentModel.getPatientModel(), true);
         }
@@ -93,7 +94,6 @@ public class AppoimentController {
         model.put("statuses", statuses);
         model.put("doctors", doctors);
         model.put("patients", patients);
-
         return "editAppoiment";
     }
 

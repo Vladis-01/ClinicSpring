@@ -17,14 +17,18 @@ Edit appoiment
     Doctor
     <select name="doctorModel">
         {{#doctors}}
-            <option value="{{id}}" {{#value}}selected{{/value}}>{{fullName}}</option>
+            {{#entrySet}}
+                <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>
+            {{/entrySet}}
         {{/doctors}}
     </select>
     <br>
     Patient
     <select name="patientModel">
         {{#patients}}
-            <option value="{{id}}" {{#value}}selected{{/value}}>{{fullName}}</option>
+            {{#entrySet}}
+                <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>
+            {{/entrySet}}
         {{/patients}}
     </select><br>
     Status<br>
