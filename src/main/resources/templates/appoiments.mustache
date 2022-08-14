@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Main page </title>
+</head>
+<body>
+
+<form action="/doctor/appoiments/createAppoiment" method="get">
+    <div><input type="submit" value="Create"/></div>
+</form>
+
+All appoiments
+
+<table>
+    <tr>
+        <th>dateAppointment</th>
+        <th>price</th>
+        <th>status</th>
+        <th>patient</th>
+        <th>doctor</th>
+    </tr>
+
+    {{#appoiments}}
+        <tr>
+            <td>{{dateAppointment}}</td>
+            <td>{{price}}</td>
+            <td>
+                {{#status}}
+                    '{{.}}'
+                {{/status}}
+            </td>
+            <td>{{patientModel}}</td>
+            <td>{{doctorModel}}</td>
+            <td>
+                <form action="/doctor/appoiments/{{id}}" method="get">
+                    <div><input type="submit" value="Edit"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/doctors/{{id}}" method="post">
+                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+    {{/appoiments}}
+</table>
+
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Edit doctor</title>
+</head>
+<body>
+Create doctor
+<form action="/doctor/doctors" method="post">
+    {{#doctorModel}}
+    <div><label> User name : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
+    <div><label> Password: <input type="password" name="password" value="{{password}}" minlength="5" required /> </label></div>
+    <div><label> Full name: <input type="text" name="fullName" value="{{fullName}}" minlength="5" required /> </label></div>
+    <input type="hidden" value="{{id}}" name="id">
+    {{/doctorModel}}
+
+    Positions<br>
+    {{#positions}}
+        {{#entrySet}}
+            <input name="{{key}}" type="checkbox" {{#value}}checked{{/value}}>{{key}}<br>
+        {{/entrySet}}
+    {{/positions}}
+
+    Roles<br>
+    {{#roles}}
+        {{#entrySet}}
+            <input name="{{key}}" type="checkbox" {{#value}}checked{{/value}}>{{key}}<br>
+        {{/entrySet}}
+    {{/roles}}
+
+    <div><input type="submit" value="Save"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+
+</form>
+</body>
+</html>

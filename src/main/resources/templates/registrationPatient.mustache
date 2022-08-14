@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Registration patient</title>
+</head>
+<body>
+Create patient
+<form action="/patient/registration" method="post">
+    <div><label> Username : <input type="text" name="username" minlength="2" required /> </label></div>
+    <div><label> Full name: <input type="text" name="fullName" minlength="5" required /> </label></div>
+    <div><label> Password: <input type="text" name="password" minlength="5" required /> </label></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    <div><input type="submit" value="Registration"/></div>
+</form>
+<form action="/welcome" method="get">
+    <div><input type="submit" value="Main"/></div>
+
+</form>
+</body>
+</html>

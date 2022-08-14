@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Doctors</title>
+</head>
+<body>
+<form action="/doctor/doctors/createDoctor" method="get">
+    <div><input type="submit" value="Create"/></div>
+</form>
+
+All doctors
+
+<table>
+    <tr>
+        <th>username</th>
+        <th>fullName</th>
+        <th>roles</th>
+        <th>positions</th>
+    </tr>
+
+{{#doctors}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{fullName}}</td>
+            <td>
+                {{#role}}
+                    '{{name}}'
+                {{/role}}
+            </td>
+            <td>
+                {{#position}}
+                    '{{name}}'
+                {{/position}}
+            </td>
+            <td>
+                <form action="/doctor/doctors/{{id}}" method="get">
+                    <div><input type="submit" value="Edit"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/doctors/{{id}}" method="post">
+                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+{{/doctors}}
+</table>
+
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+</body>
+</html>

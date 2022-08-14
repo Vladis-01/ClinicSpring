@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Patient account</title>
+</head>
+<body>
+Your data
+
+<table>
+    <tr>
+        <th>username</th>
+        <th>fullName</th>
+    </tr>
+
+    {{#patientModel}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{fullName}}</td>
+        </tr>
+    {{/patientModel}}
+</table>
+
+<table>
+    <tr>
+        <th>date</th>
+        <th>price</th>
+        <th>status</th>
+        <th>description</th>
+        <th>doctor name</th>
+    </tr>
+
+    {{#appoimentModels}}
+        <tr>
+            <td>{{dateAppointment}}</td>
+            <td>{{price}}</td>
+            <td>{{status}}</td>
+            <td>{{description}}</td>
+            <td>{{doctorModel.fullName}}</td>
+        </tr>
+    {{/appoimentModels}}
+</table>
+
+<form action="/patient/doctors" method="get">
+    <div><input type="submit" value="Doctors"/></div>
+</form>
+
+<form action="/patient/editPatient" method="get">
+    <div><input type="submit" value="Edit account"/></div>
+</form>
+
+<form action="/patient/logout" method="post">
+    <div><input type="submit" value="Sign Out"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+
+</body>
+</html>

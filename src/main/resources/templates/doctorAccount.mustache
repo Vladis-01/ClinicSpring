@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Doctor account</title>
+</head>
+<body>
+Your data
+
+<table>
+    <tr>
+        <th>username</th>
+        <th>fullName</th>
+        <th>roles</th>
+        <th>positions</th>
+    </tr>
+
+{{#doctorModel}}
+        <tr>
+            <td>{{username}}</td>
+            <td>{{fullName}}</td>
+            <td>{{role}}</td>
+            <td>{{position}}</td>
+        </tr>
+{{/doctorModel}}
+</table>
+
+<form action="/doctor/patients" method="get">
+    <div><input type="submit" value="Patients"/></div>
+</form>
+
+<form action="/doctor/doctors" method="get">
+    <div><input type="submit" value="Doctors"/></div>
+</form>
+
+<form action="/doctor/appoiments" method="get">
+    <div><input type="submit" value="Appoiments"/></div>
+</form>
+
+<form action="/doctor/folders" method="get">
+    <div><input type="submit" value="Folders"/></div>
+</form>
+
+<form action="/doctor/logout" method="post">
+    <div><input type="submit" value="Sign Out"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+
+</body>
+</html>

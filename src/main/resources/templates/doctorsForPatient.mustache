@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Doctors</title>
+</head>
+<body>
+
+Doctors<br>
+<form action="/patient/doctors" method="get">
+    <label>
+        <select name="position">
+            <option label=""></option>
+            {{#positions}}
+                <option value="{{.}}">{{.}}</option>
+            {{/positions}}
+        </select>
+    </label><br>
+
+    <div><input type="submit" value="filter"/></div>
+</form>
+
+<table>
+    <tr>
+        <th>fullName</th>
+        <th>positions</th>
+    </tr>
+
+    {{#doctors}}
+        <tr>
+            <td>{{fullName}}</td>
+            <td>
+                {{#position}}
+                    '{{name}}'
+                {{/position}}
+            </td>
+        </tr>
+    {{/doctors}}
+</table>
+
+<form action="/patient" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+</body>
+</html>

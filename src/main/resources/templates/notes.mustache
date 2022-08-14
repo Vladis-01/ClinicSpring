@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>All notes</title>
+</head>
+<body>
+All notes
+<table>
+    <tr>
+        <th>name</th>
+        <th>patient</th>
+        <th>path</th>
+    </tr>
+    {{#notes}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{patientModel.fullName}}</td>
+            <td>{{folderModel.path}}/{{folderModel.name}}</td>
+            <td>
+                <form action="/doctor/folders/editNote/{{id}}" method="get">
+                    <div><input type="submit" value="Open"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/folders/deleteNote/{{id}}" method="post">
+                    <div><input type="submit" value="Delete"/></div>
+                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                </form>
+            </td>
+        </tr>
+    {{/notes}}
+</table>
+
+<form action="/doctor/folders" method="get">
+    <div><input type="submit" value="folders"/></div>
+</form>
+
+</body>
+</html>

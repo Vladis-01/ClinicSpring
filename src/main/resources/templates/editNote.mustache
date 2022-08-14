@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Edit note</title>
+</head>
+<body>
+
+Edit note<br>
+
+<form action="/doctor/folders/editNote" method="post">
+    Name<br>
+    <div><input type="text" name="name" value={{note.name}} minlength="1" required /></div>
+    Patient<br>
+    <label>
+        <select name="patientModel">
+                <option name="patientModel" value="{{note.patientModel.id}}">{{note.patientModel.id}}, {{note.patientModel.fullName}}, {{note.patientModel.username}}</option>
+        </select>
+    </label><br>
+    <div><textarea name="text" minlength="1" required >{{note.text}}</textarea></div>
+    <input type="hidden" name="folderModel" value="{{folderModel.id}}" />
+
+    <div><input type="submit" value="Save"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+<form action="/doctor/folders" method="get">
+    <div><input type="submit" value="Folders"/></div>
+</form>
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+</body>
+</html>

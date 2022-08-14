@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Create note</title>
+</head>
+<body>
+
+All patients<br>
+
+Input name
+<form action="/doctor/folders/createNote" method="get">
+    <div><input type="search" name="patientName" minlength="1"/></div>
+    <div><input type="submit" value="Search"/></div>
+</form>
+
+
+<form action="/doctor/folders/createNote" method="post">
+    Name<br>
+    <div><input type="text" name="name" minlength="1" required /></div>
+    Patient<br>
+    <label>
+        <select name="patientModel">
+            {{#patients}}
+                <option name="patientModel" value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
+            {{/patients}}
+        </select>
+    </label><br>
+    <div><textarea name="text" minlength="1"  required ></textarea></div>
+    <input type="hidden" name="folderModel" value="{{folderModel.id}}" />
+
+    <div><input type="submit" value="Create"/></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+<form action="/doctor/folders" method="get">
+    <div><input type="submit" value="Folders"/></div>
+</form>
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+</body>
+</html>

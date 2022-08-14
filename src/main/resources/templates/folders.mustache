@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Folders</title>
+</head>
+<body>
+<form action="/doctor/folders/createFolder" method="get">
+    <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
+    <div><input type="submit" value="Create folder"/></div>
+</form>
+<form action="/doctor/folders/createNote" method="get">
+    <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
+    <div><input type="submit" value="Create note"/></div>
+</form>
+
+
+{{#currentFolder}}
+    Folder {{name}}<br>
+    {{path}}
+{{/currentFolder}}
+
+<form action="/doctor/folders/{{parentID}}" method="get">
+    <div><input type="submit" value="Above"/></div>
+</form>
+
+<form action="/doctor/folders/{{root.id}}" method="get">
+    <div><input type="submit" value="Root"/></div>
+</form>
+
+<form action="/doctor/folders/notes" method="get">
+    <div><input type="submit" value="All notes"/></div>
+</form>
+
+Folders<br>
+<table>
+    <tr>
+        <th>name</th>
+        <th>path</th>
+    </tr>
+
+    {{#folders}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{path}}</td>
+            <td>
+                <form action="/doctor/folders/{{id}}" method="get">
+                    <div><input type="submit" value="Open"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/folders/{{id}}" method="get">
+                    <div><input type="submit" value="Edit"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/folders/{{id}}" method="post">
+                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+    {{/folders}}
+</table>
+
+<form action="/doctor/folders/{{currentFolder.id}}" method="get">
+    Patient<br>
+    <label>
+        <select name="patientModel">
+            <option label=""></option>
+            {{#patients}}
+                <option value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
+            {{/patients}}
+        </select>
+</label><br>
+
+    <div><input type="submit" value="filter"/></div>
+</form>
+
+Notes<br>
+<table>
+    <tr>
+        <th>name</th>
+        <th>patient</th>
+        <th>path</th>
+    </tr>
+{{#notes}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{patientModel.fullName}}</td>
+        <td>{{folderModel.path}}/{{folderModel.name}}</td>
+        <td>
+            <form action="/doctor/folders/editNote/{{id}}" method="get">
+                <div><input type="submit" value="Open"/></div>
+            </form>
+        </td>
+        <td>
+            <form action="/doctor/folders/deleteNote/{{id}}" method="post">
+                <div><input type="submit" value="Delete"/></div>
+                <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            </form>
+        </td>
+
+    </tr>
+{{/notes}}
+</table>
+
+
+<form action="/doctor" method="get">
+    <div><input type="submit" value="Main"/></div>
+</form>
+
+
+</body>
+</html>
