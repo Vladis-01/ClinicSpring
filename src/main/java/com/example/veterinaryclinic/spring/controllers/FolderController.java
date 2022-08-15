@@ -97,6 +97,21 @@ public class FolderController {
         return "createNote";
     }
 
+    @PostMapping("/editNote")
+    public String editNotePost(NoteModel note, HashMap<String, Object> model) {
+        NoteModel noteFromDb = noteRepo.findByNameAndFolderModel(note.getName(), note.getFolderModel());
+
+        if (noteFromDb != null && noteFromDb.getId() != noteFromDb.getId()) {
+            model.put("note", note);
+            model.put("folderModel", currentFolder);
+            return "redirect:/doctor/folders/editNote";
+        }
+        note.setUpdateDate(Instant.now());
+
+        noteRepo.save(note);
+        return "redirect:/doctor/folders";
+    }
+
     @GetMapping("/editNote/{note}")
     public String editNote(@PathVariable(value = "note") NoteModel note, HashMap<String, Object> model) {
         model.put("note", note);

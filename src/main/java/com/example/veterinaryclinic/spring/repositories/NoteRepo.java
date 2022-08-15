@@ -12,6 +12,8 @@ import java.util.Set;
 public interface NoteRepo extends JpaRepository<NoteModel, Long> {
     List<NoteModel> findByFolderModelOrderByPatientModelAscUpdateDateDesc(FolderModel folderModel);
     List<NoteModel> findByFolderModelAndPatientModelOrderByPatientModelAscUpdateDateDesc(FolderModel folderModel, PatientModel patientModel);
+
+    NoteModel findByNameAndFolderModel(String name, FolderModel folderModel);
 }
 
 

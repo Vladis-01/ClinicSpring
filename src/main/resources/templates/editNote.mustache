@@ -19,6 +19,7 @@ Edit note<br>
     </label><br>
     <div><textarea name="text" minlength="1" required >{{note.text}}</textarea></div>
     <input type="hidden" name="folderModel" value="{{folderModel.id}}" />
+    <input type="hidden" value="{{note.id}}" name="id">
 
     <div><input type="submit" value="Save"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
