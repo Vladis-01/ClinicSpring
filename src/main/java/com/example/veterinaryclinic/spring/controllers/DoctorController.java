@@ -15,8 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 @RequestMapping("/doctor/doctors")
-@PreAuthorize("hasAuthority('ADMIN')")
 @Controller
 public class DoctorController {
     private final DoctorRepo doctorRepo;

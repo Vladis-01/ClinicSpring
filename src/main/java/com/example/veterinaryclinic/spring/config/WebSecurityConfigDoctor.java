@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(2)
 public class WebSecurityConfigDoctor extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -24,6 +25,7 @@ public class WebSecurityConfigDoctor extends WebSecurityConfigurerAdapter {
                 .antMatcher("/doctor/**")
                 .authorizeRequests()
                 .antMatchers("/doctor/registration", "/doctor/login").anonymous().anyRequest().authenticated()
+                .and().exceptionHandling().accessDeniedPage("/checkUser")
                 .and()
                 .formLogin()
                 .loginPage("/doctor/login")

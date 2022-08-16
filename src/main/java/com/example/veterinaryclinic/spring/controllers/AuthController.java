@@ -62,7 +62,16 @@ public class AuthController {
         return "loginPatient";
     }
 
-
+    @GetMapping("/checkUser")
+    public String checkUser(@AuthenticationPrincipal DoctorModel currentDoctor, @AuthenticationPrincipal PatientModel currentPatient){
+        if(currentDoctor != null){
+            return "/doctor";
+        }
+        if(currentPatient != null){
+            return "/patient";
+        }
+        return "/";
+    }
 
     @PostMapping("/patient/registration")
     public String registrationPatient(PatientModel patientModel) {
