@@ -36,7 +36,7 @@ public class AuthController {
 
     @GetMapping("/doctor/login")
     public String loginDoctor() {
-        if(doctorRepo.findAll() == null){
+        if(doctorRepo.findAll().size() == 0){
             DoctorModel doctorModel = new DoctorModel();
             doctorModel.setUsername("admin");
             doctorModel.setPassword("admin");
