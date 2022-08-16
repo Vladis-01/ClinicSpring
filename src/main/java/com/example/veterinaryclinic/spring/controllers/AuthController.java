@@ -40,6 +40,7 @@ public class AuthController {
             DoctorModel doctorModel = new DoctorModel();
             doctorModel.setUsername("admin");
             doctorModel.setPassword("admin");
+            doctorModel.setFullName("admin");
             doctorModel.setRole(new HashSet<>(Collections.singleton(Role.ADMIN)));
             doctorRepo.save(doctorModel);
         }
