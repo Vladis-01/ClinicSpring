@@ -1,5 +1,6 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.Enums.Role;
 import com.example.veterinaryclinic.spring.models.DoctorModel;
 import com.example.veterinaryclinic.spring.models.PatientModel;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
@@ -10,8 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 @Controller
 public class AuthController {
@@ -33,6 +36,13 @@ public class AuthController {
 
     @GetMapping("/doctor/login")
     public String loginDoctor() {
+        if(doctorRepo.findAll() == null){
+            DoctorModel doctorModel = new DoctorModel();
+            doctorModel.setUsername("admin");
+            doctorModel.setPassword("admin");
+            doctorModel.setRole(new HashSet<>(Collections.singleton(Role.ADMIN)));
+            doctorRepo.save(doctorModel);
+        }
         return "loginDoctor";
     }
 
