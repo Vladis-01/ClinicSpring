@@ -1,28 +1,23 @@
 package com.example.veterinaryclinic.spring.controllers;
 
-import com.example.veterinaryclinic.spring.models.DoctorModel;
-import com.example.veterinaryclinic.spring.models.FolderModel;
-import com.example.veterinaryclinic.spring.models.NoteModel;
-import com.example.veterinaryclinic.spring.models.PatientModel;
+import com.example.veterinaryclinic.spring.entities.Folder;
+import com.example.veterinaryclinic.spring.entities.Note;
+import com.example.veterinaryclinic.spring.entities.Patient;
 import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
 import com.example.veterinaryclinic.spring.repositories.FolderRepo;
 import com.example.veterinaryclinic.spring.repositories.NoteRepo;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import com.example.veterinaryclinic.spring.services.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('DOCTOR', 'ADMIN')")
 @RequestMapping("/doctor/folders")
 public class FolderController {
     private final FolderRepo folderRepo;
@@ -31,9 +26,8 @@ public class FolderController {
     private final NoteRepo noteRepo;
     private final NoteService noteService;
 
-    FolderModel currentFolder;
+    Folder currentFolder;
 
-    @Autowired
     public FolderController(FolderRepo folderRepo, DoctorRepo doctorRepo, PatientRepo patientRepo, NoteRepo noteRepo, NoteService noteService) {
         this.folderRepo = folderRepo;
         this.doctorRepo = doctorRepo;
@@ -43,7 +37,7 @@ public class FolderController {
     }
 
     @GetMapping(value={"", "/{nextFolder}"})
-    public String getFolders(@PathVariable(required = false) FolderModel nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
+    public String getFolders(@PathVariable(required = false) Folder nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
         if (nextFolder != null) {
             setCurrentFolder(nextFolder);
         } else {
@@ -61,28 +55,28 @@ public class FolderController {
     }
 
     @GetMapping("/createFolder")
-    public String createFolder(@RequestParam("currentFolder") FolderModel currentFolder, HashMap<String, Object> model) {
+    public String createFolder(@RequestParam("currentFolder") Folder currentFolder, HashMap<String, Object> model) {
         model.put("currentFolder", currentFolder);
         return "createFolder";
     }
 
     @PostMapping("/createFolder")
-    public String createFolder(FolderModel folderModel) {
-        FolderModel folderFromDb = folderRepo.findByParentAndName(folderModel.getParent(), folderModel.getName());
+    public String createFolder(@Valid Folder folder) {
+        Folder folderFromDb = folderRepo.findByParentAndName(folder.getParent(), folder.getName());
 
         if (folderFromDb != null) {
             return "redirect:/doctor/folders/createFolder";
         }
 
-        folderModel.setPath(folderModel.getParent().getPath() + folderModel.getParent().getName() + "/");
+        folder.setPath(folder.getParent().getPath() + folder.getParent().getName() + "/");
 
-        folderRepo.save(folderModel);
+        folderRepo.save(folder);
         currentFolder.setFolders(folderRepo.findByParent(currentFolder));
         return "redirect:/doctor/folders/";
     }
 
     @DeleteMapping("/{folder}")
-    public String deleteFolder(@PathVariable FolderModel folder) {
+    public String deleteFolder(@PathVariable Folder folder) {
         folderRepo.delete(folder);
         currentFolder.setFolders(folderRepo.findByParent(currentFolder));
         return "redirect:/doctor/folders/";
@@ -98,8 +92,8 @@ public class FolderController {
     }
 
     @PostMapping("/editNote")
-    public String editNotePost(NoteModel note, HashMap<String, Object> model) {
-        NoteModel noteFromDb = noteRepo.findByNameAndFolderModel(note.getName(), note.getFolderModel());
+    public String editNotePost(@Valid Note note, HashMap<String, Object> model) {
+        Note noteFromDb = noteRepo.findByNameAndFolder(note.getName(), note.getFolder());
 
         if (noteFromDb != null && noteFromDb.getId() != noteFromDb.getId()) {
             model.put("note", note);
@@ -113,22 +107,22 @@ public class FolderController {
     }
 
     @GetMapping("/editNote/{note}")
-    public String editNote(@PathVariable(value = "note") NoteModel note, HashMap<String, Object> model) {
+    public String editNote(@PathVariable(value = "note") Note note, HashMap<String, Object> model) {
         model.put("note", note);
         model.put("folderModel", currentFolder);
         return "editNote";
     }
 
     @DeleteMapping("/deleteNote/{note}")
-    public String deleteNote(@PathVariable(value = "note") NoteModel note) {
+    public String deleteNote(@PathVariable(value = "note") Note note) {
         noteRepo.delete(note);
-        currentFolder.setNotes(noteRepo.findByFolderModelOrderByPatientModelAscUpdateDateDesc(currentFolder));
+        currentFolder.setNotes(noteRepo.findByFolderOrderByPatientAscUpdateDateDesc(currentFolder));
         return "redirect:/doctor/folders/";
     }
 
     @PostMapping("/createNote")
-    public String createNote(NoteModel noteModel, @RequestParam(value = "patientModel") PatientModel patientModel ) {
-        noteService.createOrUpdateNote(noteModel, patientModel);
+    public String createNote(@Valid Note note, @RequestParam(value = "patient") Patient patient) {
+        noteService.createOrUpdateNote(note, patient);
         return "redirect:/doctor/folders";
     }
 
@@ -138,7 +132,7 @@ public class FolderController {
         return "notes";
     }
 
-    private void setCurrentFolder(FolderModel nextFolder){
+    private void setCurrentFolder(Folder nextFolder){
         currentFolder = nextFolder;
     }
     private void setCurrentFolder(){
@@ -146,7 +140,7 @@ public class FolderController {
             currentFolder = folderRepo.findByName("root");
         }
         if(currentFolder == null){
-            currentFolder = new FolderModel();
+            currentFolder = new Folder();
             currentFolder.setName("root");
             currentFolder.setPath("/");
             folderRepo.save(currentFolder);
@@ -155,7 +149,7 @@ public class FolderController {
     }
 
     private Long getParent(){
-        FolderModel root = folderRepo.findByName("root");
+        Folder root = folderRepo.findByName("root");
         if(currentFolder.getParent() != null){
             return currentFolder.getParent().getId();
         } else{
@@ -163,13 +157,13 @@ public class FolderController {
         }
     }
 
-    private List<NoteModel> getNotes(Map<String, String> form) {
+    private List<Note> getNotes(Map<String, String> form) {
         List notes;
-        if (form.get("patientModel") != null && !form.get("patientModel").equals("")) {
-            PatientModel patientModel = patientRepo.getReferenceById(Long.valueOf(form.get("patientModel")));
-            notes = noteRepo.findByFolderModelAndPatientModelOrderByPatientModelAscUpdateDateDesc(currentFolder, patientModel);
+        if (form.get("patient") != null && !form.get("patient").equals("")) {
+            Patient patient = patientRepo.getReferenceById(Long.valueOf(form.get("patient")));
+            notes = noteRepo.findByFolderAndPatientOrderByPatientAscUpdateDateDesc(currentFolder, patient);
         } else {
-            notes = noteRepo.findByFolderModelOrderByPatientModelAscUpdateDateDesc(currentFolder);
+            notes = noteRepo.findByFolderOrderByPatientAscUpdateDateDesc(currentFolder);
         }
         return notes;
     }

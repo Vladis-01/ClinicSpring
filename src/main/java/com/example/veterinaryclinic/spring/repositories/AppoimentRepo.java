@@ -1,19 +1,19 @@
 package com.example.veterinaryclinic.spring.repositories;
 
-import com.example.veterinaryclinic.spring.models.AppointmentModel;
-import com.example.veterinaryclinic.spring.models.DoctorModel;
-import com.example.veterinaryclinic.spring.models.PatientModel;
+import com.example.veterinaryclinic.spring.entities.Appointment;
+import com.example.veterinaryclinic.spring.entities.Doctor;
+import com.example.veterinaryclinic.spring.entities.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public interface AppoimentRepo extends JpaRepository<AppointmentModel, Long> {
+@Repository
+public interface AppoimentRepo extends JpaRepository<Appointment, Long> {
     // Фильтр для того чтобы узнать есть ли запись на выбранное время у пациента или доктора
-    AppointmentModel findByDateAppointmentAndDoctorModelOrDateAppointmentAndPatientModel(Date dateAppoiment, DoctorModel doctorModel,
-                                                                                         Date dateAppoiment2, PatientModel patientModel);
+    Appointment findByDateAppointmentAndDoctorOrDateAppointmentAndPatient(Date dateAppoiment, Doctor doctor,
+                                                                          Date dateAppoiment2, Patient patient);
 
-    List<AppointmentModel> findByPatientModelOrderByDateAppointment(PatientModel patientModel);
+    List<Appointment> findByPatientOrderByDateAppointment(Patient patient);
 }

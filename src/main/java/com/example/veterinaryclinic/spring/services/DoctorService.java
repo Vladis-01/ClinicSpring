@@ -2,12 +2,12 @@ package com.example.veterinaryclinic.spring.services;
 
 import com.example.veterinaryclinic.spring.Enums.Position;
 import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.models.DoctorModel;
+import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -18,28 +18,30 @@ import java.util.stream.Collectors;
 
 @Service
 public class DoctorService implements UserDetailsService {
-    @Autowired
-    private DoctorRepo doctorRepo;
+    private final DoctorRepo doctorRepo;
+    private final PasswordEncoder passwordEncoder;
+
+    public DoctorService(DoctorRepo doctorRepo, PasswordEncoder passwordEncoder) {
+        this.doctorRepo = doctorRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        DoctorModel doctorModel = doctorRepo.findByUsername(username);
-        if(doctorModel == null){
-            throw new UsernameNotFoundException("User not authorized.");
-        }
-        return doctorRepo.findByUsername(username);
+        return doctorRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + " not authorized."));
     }
 
-    public void createOrUpdateDoctor(DoctorModel doctorModel, Map<String, String> form){
+    public void createOrUpdateDoctor(Doctor doctor, Map<String, String> form){
         Set<String> positions = Arrays.stream(Position.values())
                 .map(Position::name)
                 .collect(Collectors.toSet());
         for (String key : form.keySet()) {
             if (positions.contains(key)) {
-                if(doctorModel.getPosition() == null){
-                    doctorModel.setPosition(new HashSet<>());
+                // Создаем Set в случае create
+                if(doctor.getPosition() == null){
+                    doctor.setPosition(new HashSet<>());
                 }
-                doctorModel.getPosition().add(Position.valueOf(key));
+                doctor.getPosition().add(Position.valueOf(key));
             }
         }
 
@@ -48,13 +50,23 @@ public class DoctorService implements UserDetailsService {
                 .collect(Collectors.toSet());
         for (String key : form.keySet()) {
             if (roles.contains(key)) {
-                if(doctorModel.getRole() == null){
-                    doctorModel.setRole(new HashSet<>());
+                // Создаем Set в случае create
+                if(doctor.getRole() == null){
+                    doctor.setRole(new HashSet<>());
                 }
-                doctorModel.getRole().add(Role.valueOf(key));
+                doctor.getRole().add(Role.valueOf(key));
             }
         }
 
-        doctorRepo.save(doctorModel);
+        if (doctor.getId() == null){
+            doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
+        } else {
+            Doctor userFromDb = doctorRepo.findById(doctor.getId()).orElse(null);
+            if (!passwordEncoder.matches(userFromDb.getPassword(), doctor.getPassword())){
+                doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
+            }
+        }
+
+        doctorRepo.save(doctor);
     }
 }

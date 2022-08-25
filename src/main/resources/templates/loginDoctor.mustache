@@ -6,11 +6,14 @@
 </head>
 <body>
 Login page
-<form action="/doctor/login" method="post">
+<form action="/login" method="post">
     <div><label> User Name : <input type="text" name="username"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     <div><input type="submit" value="Sign In"/></div>
+</form>
+<form action="/registration" method="get">
+    <div><input type="submit" value="Registration"/></div>
 </form>
 <form action="/" method="get">
     <div><input type="submit" value="Exit"/></div>

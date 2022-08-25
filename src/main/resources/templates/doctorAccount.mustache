@@ -15,14 +15,14 @@ Your data
         <th>positions</th>
     </tr>
 
-{{#doctorModel}}
+{{#doctor}}
         <tr>
             <td>{{username}}</td>
             <td>{{fullName}}</td>
             <td>{{role}}</td>
             <td>{{position}}</td>
         </tr>
-{{/doctorModel}}
+{{/doctor}}
 </table>
 
 <form action="/doctor/patients" method="get">
@@ -41,7 +41,7 @@ Your data
     <div><input type="submit" value="Folders"/></div>
 </form>
 
-<form action="/doctor/logout" method="post">
+<form action="/logout" method="post">
     <div><input type="submit" value="Sign Out"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
 </form>

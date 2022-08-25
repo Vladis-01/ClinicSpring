@@ -67,7 +67,7 @@ Folders<br>
 <form action="/doctor/folders/{{currentFolder.id}}" method="get">
     Patient<br>
     <label>
-        <select name="patientModel">
+        <select name="patient">
             <option label=""></option>
             {{#patients}}
                 <option value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
@@ -88,8 +88,8 @@ Notes<br>
 {{#notes}}
     <tr>
         <td>{{name}}</td>
-        <td>{{patientModel.fullName}}</td>
-        <td>{{folderModel.path}}/{{folderModel.name}}</td>
+        <td>{{patient.fullName}}</td>
+        <td>{{folder.path}}/{{folder.name}}</td>
         <td>
             <form action="/doctor/folders/editNote/{{id}}" method="get">
                 <div><input type="submit" value="Open"/></div>

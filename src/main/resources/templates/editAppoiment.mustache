@@ -7,15 +7,15 @@
 <body>
 Edit appoiment
 <form action="/doctor/appoiments/" method="post">
-    {{#appoimentModel}}
+    {{#appoiment}}
         <div><label> Date appoiment : <input type="datetime-local" value="{{dateAppointment}}" name="dateAppoiment" required /> </label></div>
         <div><label> Price: <input type="number" step="0.01" name="price" value="{{price}}" minlength="1" required /> </label></div>
         <div><label> Description: <textarea name="description" minlength="1" required >{{description}}</textarea></label></div>
         <input type="hidden" value="{{id}}" name="id">
-    {{/appoimentModel}}
+    {{/appoiment}}
 
     Doctor
-    <select name="doctorModel">
+    <select name="doctor">
         {{#doctors}}
             {{#entrySet}}
                 <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>
@@ -24,7 +24,7 @@ Edit appoiment
     </select>
     <br>
     Patient
-    <select name="patientModel">
+    <select name="patient">
         {{#patients}}
             {{#entrySet}}
                 <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>

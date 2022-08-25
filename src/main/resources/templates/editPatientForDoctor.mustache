@@ -7,11 +7,11 @@
 <body>
 Create doctor
 <form action="/doctor/patients" method="post">
-    {{#patientModel}}
+    {{#patient}}
         <div><label> Username : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
         <div><label> Full name: <input type="text" name="fullName" value="{{fullName}}" minlength="5" required /> </label></div>
         <input type="hidden" value="{{id}}" name="id">
-    {{/patientModel}}
+    {{/patient}}
 
     <div><input type="submit" value="Save"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
@@ -39,8 +39,8 @@ Create doctor
                     '{{.}}'
                 {{/status}}
             </td>
-            <td>{{patientModel}}</td>
-            <td>{{doctorModel}}</td>
+            <td>{{patient}}</td>
+            <td>{{doctor}}</td>
             <td>
                 <form action="/doctor/appoiments/{{id}}" method="get">
                     <div><input type="submit" value="Edit"/></div>

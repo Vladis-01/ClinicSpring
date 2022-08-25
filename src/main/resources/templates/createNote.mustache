@@ -20,14 +20,14 @@ Input name
     <div><input type="text" name="name" minlength="1" required /></div>
     Patient<br>
     <label>
-        <select name="patientModel">
+        <select name="patient">
             {{#patients}}
-                <option name="patientModel" value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
+                <option name="patient" value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
             {{/patients}}
         </select>
     </label><br>
     <div><textarea name="text" minlength="1"  required ></textarea></div>
-    <input type="hidden" name="folderModel" value="{{folderModel.id}}" />
+    <input type="hidden" name="folder" value="{{folder.id}}" />
 
     <div><input type="submit" value="Create"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />

@@ -1,15 +1,9 @@
-package com.example.veterinaryclinic.spring.models;
+package com.example.veterinaryclinic.spring.entities;
 
-import com.example.veterinaryclinic.spring.Enums.Status;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Id;
 
-import javax.management.ConstructorParameters;
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="folders")
-public class FolderModel {
+public class Folder {
 
     @javax.persistence.Id
     @Id
@@ -28,13 +22,13 @@ public class FolderModel {
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "folder_id")
-    private FolderModel parent;
+    private Folder parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private Set<FolderModel> folders;
+    private Set<Folder> folders;
 
-    @OneToMany(mappedBy = "folderModel", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private List<NoteModel> notes;
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Note> notes;
 
     private String path;
 

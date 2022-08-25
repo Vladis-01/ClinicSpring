@@ -2,15 +2,16 @@ package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.Enums.Position;
 import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.models.DoctorModel;
-import com.example.veterinaryclinic.spring.models.PatientModel;
+import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
 import com.example.veterinaryclinic.spring.services.DoctorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,7 +29,7 @@ public class DoctorController {
     }
 
     @GetMapping("/createDoctor")
-    public String createDoctor(DoctorModel doctorModel, HashMap<String, Object> model) {
+    public String createDoctor(Doctor doctor, HashMap<String, Object> model) {
         model.put("positions", Position.values());
         model.put("roles", Role.values());
         return "createDoctor";
@@ -40,17 +41,17 @@ public class DoctorController {
         return "doctors";
     }
 
-    @GetMapping("{doctorModel}")
-    public String editDoctor(@PathVariable DoctorModel doctorModel, HashMap<String, Object> model){
+    @GetMapping("{doctor}")
+    public String editDoctor(@PathVariable Doctor doctor, HashMap<String, Object> model){
         HashMap roles = (HashMap) Stream.of(Role.values()).collect(Collectors.toMap(e -> e, e -> false));
-        if(doctorModel.getRole() != null) {
-            for(Role role: doctorModel.getRole()){
+        if(doctor.getRole() != null) {
+            for(Role role: doctor.getRole()){
                 roles.put(role, true);
             }
         }
         HashMap positions = (HashMap) Stream.of(Position.values()).collect(Collectors.toMap(e -> e, e -> false));
-        if(doctorModel.getRole() != null) {
-            for(Position position: doctorModel.getPosition()){
+        if(doctor.getRole() != null) {
+            for(Position position: doctor.getPosition()){
                 positions.put(position, true);
             }
         }
@@ -62,31 +63,36 @@ public class DoctorController {
     }
 
     @PostMapping
-    public String editDoctor(DoctorModel doctorModel, @RequestParam Map<String, String> form) {
-        DoctorModel userFromDb = doctorRepo.findByUsername(doctorModel.getUsername());
+    public String editDoctor(@Valid Doctor doctor, @RequestParam Map<String, String> form) {
+        Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
 
-        if (userFromDb != null && userFromDb.getId() != doctorModel.getId()) {
-            return "redirect:/doctor/doctors/{doctorModel}";
+        if (userFromDb != null && userFromDb.getId() != doctor.getId()) {
+            return "redirect:/doctor/doctors/{doctor}";
         }
 
-        doctorService.createOrUpdateDoctor(doctorModel, form);
+        String newPassword = form.get("newPassword");
+        if(newPassword.equals("")){
+            doctor.setPassword(userFromDb.getPassword());
+        }else doctor.setPassword(newPassword);
+
+        doctorService.createOrUpdateDoctor(doctor, form);
         return "redirect:/doctor/doctors";
     }
 
     @PostMapping("/createDoctor")
-    public String createDoctor(DoctorModel doctorModel, @RequestParam Map<String, String> form) {
-        DoctorModel userFromDb = doctorRepo.findByUsername(doctorModel.getUsername());
+    public String createDoctor(@Valid @ModelAttribute("doctor")  Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
+        Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
 
         if (userFromDb != null) {
             return "redirect:/doctor/doctors/createDoctor";
         }
-        doctorService.createOrUpdateDoctor(doctorModel, form);
+        doctorService.createOrUpdateDoctor(doctor, form);
 
         return "redirect:/doctor/doctors";
     }
 
     @DeleteMapping("/{doctor}")
-    public String deleteFolder(@PathVariable DoctorModel doctor) {
+    public String deleteFolder(@PathVariable Doctor doctor) {
         doctorRepo.delete(doctor);
         return "redirect:/doctor/doctors";
     }

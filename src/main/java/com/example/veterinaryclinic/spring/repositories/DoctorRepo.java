@@ -1,14 +1,15 @@
 package com.example.veterinaryclinic.spring.repositories;
 
 import com.example.veterinaryclinic.spring.Enums.Position;
-import com.example.veterinaryclinic.spring.models.DoctorModel;
-import com.example.veterinaryclinic.spring.models.PatientModel;
+import com.example.veterinaryclinic.spring.entities.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
-public interface DoctorRepo extends JpaRepository<DoctorModel, Long> {
-    DoctorModel findByUsername(String username);
-    List<DoctorModel> findByPosition(Position position);
+@Repository
+public interface DoctorRepo extends JpaRepository<Doctor, Long> {
+    Optional<Doctor> findByUsername(String username);
+    List<Doctor> findByPosition(Position position);
 }

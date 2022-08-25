@@ -13,12 +13,12 @@ Edit note<br>
     <div><input type="text" name="name" value={{note.name}} minlength="1" required /></div>
     Patient<br>
     <label>
-        <select name="patientModel">
-                <option name="patientModel" value="{{note.patientModel.id}}">{{note.patientModel.id}}, {{note.patientModel.fullName}}, {{note.patientModel.username}}</option>
+        <select name="patient">
+                <option name="patient" value="{{note.patient.id}}">{{note.patient.id}}, {{note.patient.fullName}}, {{note.patient.username}}</option>
         </select>
     </label><br>
     <div><textarea name="text" minlength="1" required >{{note.text}}</textarea></div>
-    <input type="hidden" name="folderModel" value="{{folderModel.id}}" />
+    <input type="hidden" name="folder" value="{{folder.id}}" />
     <input type="hidden" value="{{note.id}}" name="id">
 
     <div><input type="submit" value="Save"/></div>

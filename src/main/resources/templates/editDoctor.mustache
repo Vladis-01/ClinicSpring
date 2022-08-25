@@ -7,12 +7,12 @@
 <body>
 Create doctor
 <form action="/doctor/doctors" method="post">
-    {{#doctorModel}}
+    {{#doctor}}
     <div><label> User name : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
-    <div><label> Password: <input type="password" name="password" value="{{password}}" minlength="5" required /> </label></div>
     <div><label> Full name: <input type="text" name="fullName" value="{{fullName}}" minlength="5" required /> </label></div>
+    <div><label> New password: <input type="password" name="newPassword" value="" minlength="5" /> </label></div>
     <input type="hidden" value="{{id}}" name="id">
-    {{/doctorModel}}
+    {{/doctor}}
 
     Positions<br>
     {{#positions}}

@@ -13,12 +13,12 @@ Your data
         <th>fullName</th>
     </tr>
 
-    {{#patientModel}}
+    {{#patient}}
         <tr>
             <td>{{username}}</td>
             <td>{{fullName}}</td>
         </tr>
-    {{/patientModel}}
+    {{/patient}}
 </table>
 
 <table>
@@ -30,15 +30,15 @@ Your data
         <th>doctor name</th>
     </tr>
 
-    {{#appoimentModels}}
+    {{#appoiments}}
         <tr>
             <td>{{dateAppointment}}</td>
             <td>{{price}}</td>
             <td>{{status}}</td>
             <td>{{description}}</td>
-            <td>{{doctorModel.fullName}}</td>
+            <td>{{doctor.fullName}}</td>
         </tr>
-    {{/appoimentModels}}
+    {{/appoiments}}
 </table>
 
 <form action="/patient/doctors" method="get">
@@ -49,7 +49,7 @@ Your data
     <div><input type="submit" value="Edit account"/></div>
 </form>
 
-<form action="/patient/logout" method="post">
+<form action="/logout" method="post">
     <div><input type="submit" value="Sign Out"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
 </form>

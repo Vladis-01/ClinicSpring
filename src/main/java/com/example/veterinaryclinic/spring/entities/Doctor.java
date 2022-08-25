@@ -1,4 +1,4 @@
-package com.example.veterinaryclinic.spring.models;
+package com.example.veterinaryclinic.spring.entities;
 
 import com.example.veterinaryclinic.spring.Enums.Position;
 import com.example.veterinaryclinic.spring.Enums.Role;
@@ -22,30 +22,30 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="doctors")
-public class DoctorModel  implements UserDetails {
+public class Doctor implements UserDetails {
     @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank(message = "userName cannot be empty")
-    @Size(min=5, message = "At least 5 characters")
+    @NotBlank(message = "{notBlank}")
+    @Size(max=4, message = "{size}")
     private String username;
-    @NotBlank(message = "password cannot be empty")
-    @Size(min=5, message = "At least 5 characters")
+    @NotBlank(message = "{notBlank}")
+    @Size(max=4, message = "{size}")
     private String password;
-    @NotBlank(message = "fullName cannot be empty")
-    @Size(min=5, message = "At least 5 characters")
+    @NotBlank(message = "{notBlank}")
+    @Size(max=4, message = "{size}")
     private String fullName;
 
-    @OneToMany(mappedBy = "doctorModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<AppointmentModel> appointments;
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Appointment> appointments;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "doctor_role", joinColumns = @JoinColumn(name = "doctor_id"))
+    @CollectionTable(name = "doctor_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
+    @Cascade(value={org.hibernate.annotations.CascadeType.DELETE})
     private Set<Role> role;
 
     @ElementCollection(targetClass = Position.class, fetch = FetchType.EAGER)

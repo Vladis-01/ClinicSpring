@@ -1,12 +1,15 @@
-package com.example.veterinaryclinic.spring.models;
+package com.example.veterinaryclinic.spring.entities;
 
+import com.example.veterinaryclinic.spring.Enums.Role;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -19,27 +22,35 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name="patients")
-public class PatientModel implements UserDetails {
+public class Patient implements UserDetails {
     @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank(message = "username cannot be empty")
+    @NotBlank(message = "{notBlank}")
     private String username;
-    @NotBlank(message = "fullName cannot be empty")
+    @NotBlank(message = "{notBlank}")
     private String fullName;
 
-    @NotBlank(message = "password cannot be empty")
-    @Size(min=5, message = "At least 5 characters")
+    @NotBlank(message = "{notBlank}")
+    @Size(min=5, message = "{size}")
     private String password;
 
     private Date dateRegistration;
 
-    @OneToMany(mappedBy = "patientModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<AppointmentModel> appointments;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Appointment> appointments;
 
-    @OneToMany(mappedBy = "patientModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<NoteModel> notes;
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Note> notes;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "patient_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Cascade(value={org.hibernate.annotations.CascadeType.DELETE})
+    private Set<Role> role;
 
     @Override
     public String toString(){
@@ -48,7 +59,7 @@ public class PatientModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRole();
     }
 
     @Override

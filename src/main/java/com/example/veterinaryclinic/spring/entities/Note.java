@@ -1,6 +1,7 @@
-package com.example.veterinaryclinic.spring.models;
+package com.example.veterinaryclinic.spring.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name="files")
-public class NoteModel {
+public class Note {
     @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,14 +18,16 @@ public class NoteModel {
     private String name;
     private String text;
 
-    private Instant creationDate;
+    private Instant creationDate = Instant.now();
+
+    @UpdateTimestamp
     private Instant updateDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "folder_id")
-    private FolderModel folderModel;
+    private Folder folder;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patient_id")
-    private PatientModel patientModel;
+    private Patient patient;
 }

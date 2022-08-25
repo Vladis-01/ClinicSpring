@@ -7,12 +7,13 @@
 <body>
 Edit patient
 <form action="/patient/editPatient" method="post">
-    {{#patientModel}}
+    {{#patient}}
         <div><label> Username : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
         <div><label> Full name: <input type="text" name="fullName" value="{{fullName}}" minlength="5" required /> </label></div>
-        <div><label> Password: <input type="text" name="password" value="{{password}}" minlength="5" required /> </label></div>
+        <div><label> Current password: <input type="password" name="currentPassword" value="" minlength="5" required /> </label></div>
+        <div><label> New password: <input type="password" name="newPassword" value="" minlength="5"/> </label></div>
         <input type="hidden" value="{{id}}" name="id">
-    {{/patientModel}}
+    {{/patient}}
     <div><input type="submit" value="Save"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
 </form>

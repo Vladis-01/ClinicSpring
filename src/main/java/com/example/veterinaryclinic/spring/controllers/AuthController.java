@@ -1,70 +1,48 @@
 package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.models.DoctorModel;
-import com.example.veterinaryclinic.spring.models.PatientModel;
-import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
-import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
+import com.example.veterinaryclinic.spring.entities.Doctor;
+import com.example.veterinaryclinic.spring.entities.Patient;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 @Controller
 public class AuthController {
-    private final DoctorRepo doctorRepo;
     private final PatientRepo patientRepo;
-    private final AppoimentRepo appoimentRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public AuthController(DoctorRepo doctorRepo, PatientRepo patientRepo, AppoimentRepo appoimentRepo) {
-        this.doctorRepo = doctorRepo;
+    public AuthController(PatientRepo patientRepo, PasswordEncoder passwordEncoder) {
         this.patientRepo = patientRepo;
-        this.appoimentRepo = appoimentRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/doctor/registration")
-    public String registrationDoctor() {
-        return "registrationDoctor";
-    }
-
-    @GetMapping("/doctor/login")
-    public String loginDoctor() {
-        if(doctorRepo.findAll().size() == 0){
-            DoctorModel doctorModel = new DoctorModel();
-            doctorModel.setUsername("admin");
-            doctorModel.setPassword("admin");
-            doctorModel.setFullName("admin");
-            doctorModel.setRole(new HashSet<>(Collections.singleton(Role.ADMIN)));
-            doctorRepo.save(doctorModel);
-        }
+    @GetMapping("/login")
+    public String login() {
         return "loginDoctor";
     }
 
     @GetMapping("/doctor")
-    public String getDoctorAccount(@AuthenticationPrincipal DoctorModel currentDoctor, HashMap<String, Object> model) {
-        model.put("doctorModel", currentDoctor);
+    public String getDoctorAccount(@AuthenticationPrincipal Doctor currentDoctor, HashMap<String, Object> model) {
+        model.put("doctor", currentDoctor);
         return "doctorAccount";
     }
 
-    @GetMapping("/patient/registration")
+    @GetMapping("/registration")
     public String registrationPatient() {
         return "registrationPatient";
     }
 
-    @GetMapping("/patient/login")
-    public String loginPatient() {
-        return "loginPatient";
-    }
 
     @GetMapping("/checkUser")
-    public String checkUser(@AuthenticationPrincipal DoctorModel currentDoctor, @AuthenticationPrincipal PatientModel currentPatient){
+    public String checkUser(@AuthenticationPrincipal Doctor currentDoctor, @AuthenticationPrincipal Patient currentPatient){
         if(currentDoctor != null){
             return "/doctor";
         }
@@ -74,16 +52,18 @@ public class AuthController {
         return "/";
     }
 
-    @PostMapping("/patient/registration")
-    public String registrationPatient(PatientModel patientModel) {
-        PatientModel userFromDb = patientRepo.findByUsername(patientModel.getUsername());
+    @PostMapping("/registration")
+    public String registrationPatient(@Valid Patient patient) {
+        Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
 
         if (userFromDb != null) {
-            return "redirect:/patient/registration";
+            return "redirect:/registration";
         }
-        patientModel.setDateRegistration(new Date());
-        patientRepo.save(patientModel);
+        patient.setDateRegistration(new Date());
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+        patient.setRole(Collections.singleton(Role.USER));
+        patientRepo.save(patient);
 
-        return "redirect:/patient/login";
+        return "redirect:/login";
     }
 }
