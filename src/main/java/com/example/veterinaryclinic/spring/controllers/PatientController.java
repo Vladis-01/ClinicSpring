@@ -6,6 +6,7 @@ import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,10 +36,10 @@ public class PatientController {
     }
 
     @PostMapping("/createPatient")
-    public String createPatient(@Valid Patient patient) {
+    public String createPatient(@Valid Patient patient, BindingResult bindingResult) {
         Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
 
-        if (userFromDb != null) {
+        if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/doctor/patients/createPatient";
         }
 
@@ -57,10 +58,10 @@ public class PatientController {
     }
 
     @PostMapping
-    public String editPatient(@Valid Patient patient, @RequestParam Map<String, String> form) {
+    public String editPatient(@Valid Patient patient, BindingResult bindingResult) {
         Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
 
-        if (userFromDb != null && userFromDb.getId() != patient.getId()) {
+        if (userFromDb != null && userFromDb.getId() != patient.getId() || bindingResult.hasErrors()) {
             return "redirect:/doctor/patients/{patient}";
         }
         patientRepo.save(patient);

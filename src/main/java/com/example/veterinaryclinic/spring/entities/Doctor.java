@@ -27,14 +27,14 @@ public class Doctor implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank(message = "{notBlank}")
-    @Size(max=4, message = "{size}")
+    @NotBlank(message = "{NotBlank.Username}")
+    @Size(min=2, message = "{Size.Username}")
     private String username;
-    @NotBlank(message = "{notBlank}")
-    @Size(max=4, message = "{size}")
+    @NotBlank(message = "{NotBlank.Password}")
+    @Size(min=5, message = "{Size.Password}")
     private String password;
-    @NotBlank(message = "{notBlank}")
-    @Size(max=4, message = "{size}")
+    @NotBlank(message = "{NotBlank.FullName}")
+    @Size(min=5, message = "{Size.FullName}")
     private String fullName;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

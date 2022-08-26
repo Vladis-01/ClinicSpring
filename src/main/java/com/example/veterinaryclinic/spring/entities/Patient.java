@@ -27,13 +27,15 @@ public class Patient implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotBlank(message = "{notBlank}")
+    @NotBlank(message = "{NotBlank.Username}")
+    @Size(min=2, message = "{Size.Username}")
     private String username;
-    @NotBlank(message = "{notBlank}")
+    @NotBlank(message = "{NotBlank.FullName}")
+    @Size(min=5, message = "{Size.FullName}")
     private String fullName;
 
-    @NotBlank(message = "{notBlank}")
-    @Size(min=5, message = "{size}")
+    @NotBlank(message = "{NotBlank.Password}")
+    @Size(min=5, message = "{Size.Password}")
     private String password;
 
     private Date dateRegistration;

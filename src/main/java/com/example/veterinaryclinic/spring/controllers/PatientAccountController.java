@@ -9,6 +9,7 @@ import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,9 +42,9 @@ public class PatientAccountController {
     }
     @PostMapping("/editPatient")
     public String editPatient(@RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
-                              @AuthenticationPrincipal Patient currentPatient, @Valid Patient patient) {
+                              @AuthenticationPrincipal Patient currentPatient, @Valid Patient patient, BindingResult bindingResult) {
 
-        if(!passwordEncoder.matches(currentPassword, currentPatient.getPassword())){
+        if(!passwordEncoder.matches(currentPassword, currentPatient.getPassword()) || bindingResult.hasErrors()){
             return "redirect:/patient/editPatient";
         }
 

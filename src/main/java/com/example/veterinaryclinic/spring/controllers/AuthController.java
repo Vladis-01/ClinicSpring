@@ -7,6 +7,7 @@ import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -53,10 +54,10 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String registrationPatient(@Valid Patient patient) {
+    public String registrationPatient(@Valid Patient patient, BindingResult bindingResult) {
         Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
 
-        if (userFromDb != null) {
+        if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/registration";
         }
         patient.setDateRegistration(new Date());

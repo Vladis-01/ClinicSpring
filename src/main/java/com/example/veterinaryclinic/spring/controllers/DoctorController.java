@@ -63,10 +63,10 @@ public class DoctorController {
     }
 
     @PostMapping
-    public String editDoctor(@Valid Doctor doctor, @RequestParam Map<String, String> form) {
+    public String editDoctor(@Valid Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
         Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
 
-        if (userFromDb != null && userFromDb.getId() != doctor.getId()) {
+        if (userFromDb != null && userFromDb.getId() != doctor.getId() || bindingResult.hasErrors()) {
             return "redirect:/doctor/doctors/{doctor}";
         }
 
@@ -80,10 +80,10 @@ public class DoctorController {
     }
 
     @PostMapping("/createDoctor")
-    public String createDoctor(@Valid @ModelAttribute("doctor")  Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
+    public String createDoctor(@Valid Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
         Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
 
-        if (userFromDb != null) {
+        if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/doctor/doctors/createDoctor";
         }
         doctorService.createOrUpdateDoctor(doctor, form);
