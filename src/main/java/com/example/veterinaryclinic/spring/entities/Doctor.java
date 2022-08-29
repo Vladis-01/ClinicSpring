@@ -30,8 +30,7 @@ public class Doctor implements UserDetails {
     @NotBlank(message = "{NotBlank.Username}")
     @Size(min=2, message = "{Size.Username}")
     private String username;
-    @NotBlank(message = "{NotBlank.Password}")
-    @Size(min=5, message = "{Size.Password}")
+
     private String password;
     @NotBlank(message = "{NotBlank.FullName}")
     @Size(min=5, message = "{Size.FullName}")

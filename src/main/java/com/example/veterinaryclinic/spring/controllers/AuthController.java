@@ -1,9 +1,11 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.Enums.Role;
 import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.entities.Patient;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
+import com.example.veterinaryclinic.spring.services.PatientService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,11 +19,11 @@ import java.util.HashMap;
 
 @Controller
 public class AuthController {
-    private final PatientRepo patientRepo;
+    private final PatientService patientService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(PatientRepo patientRepo, PasswordEncoder passwordEncoder) {
-        this.patientRepo = patientRepo;
+    public AuthController(PatientService patientService, PasswordEncoder passwordEncoder) {
+        this.patientService = patientService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -54,16 +56,15 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String registrationPatient(@Valid Patient patient, BindingResult bindingResult) {
-        Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
+    public String registrationPatient(@Valid PatientDto patient, BindingResult bindingResult) {
+        PatientDto userFromDb = patientService.getPatientByUsername(patient.getUsername());
 
         if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/registration";
         }
         patient.setDateRegistration(new Date());
-        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
         patient.setRole(Collections.singleton(Role.USER));
-        patientRepo.save(patient);
+        patientService.createOrUpdatePatient(patient);
 
         return "redirect:/login";
     }

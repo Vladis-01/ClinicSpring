@@ -34,8 +34,6 @@ public class Patient implements UserDetails {
     @Size(min=5, message = "{Size.FullName}")
     private String fullName;
 
-    @NotBlank(message = "{NotBlank.Password}")
-    @Size(min=5, message = "{Size.Password}")
     private String password;
 
     private Date dateRegistration;

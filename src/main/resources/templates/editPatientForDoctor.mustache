@@ -5,7 +5,7 @@
     <title>Edit patient</title>
 </head>
 <body>
-Create doctor
+Edit patient
 <form action="/doctor/patients" method="post">
     {{#patient}}
         <div><label> Username : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
@@ -39,8 +39,8 @@ Create doctor
                     '{{.}}'
                 {{/status}}
             </td>
-            <td>{{patient}}</td>
-            <td>{{doctor}}</td>
+            <td>{{patientDto}}</td>
+            <td>{{doctorDto}}</td>
             <td>
                 <form action="/doctor/appoiments/{{id}}" method="get">
                     <div><input type="submit" value="Edit"/></div>

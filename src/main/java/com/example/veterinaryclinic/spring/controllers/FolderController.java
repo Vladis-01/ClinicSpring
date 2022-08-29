@@ -1,5 +1,8 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.DTO.FolderDto;
+import com.example.veterinaryclinic.spring.DTO.NoteDto;
+import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.entities.Folder;
 import com.example.veterinaryclinic.spring.entities.Note;
 import com.example.veterinaryclinic.spring.entities.Patient;
@@ -7,7 +10,12 @@ import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
 import com.example.veterinaryclinic.spring.repositories.FolderRepo;
 import com.example.veterinaryclinic.spring.repositories.NoteRepo;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
+import com.example.veterinaryclinic.spring.services.DoctorService;
+import com.example.veterinaryclinic.spring.services.FolderService;
 import com.example.veterinaryclinic.spring.services.NoteService;
+import com.example.veterinaryclinic.spring.services.PatientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,35 +28,33 @@ import java.util.Map;
 @Controller
 @RequestMapping("/doctor/folders")
 public class FolderController {
-    private final FolderRepo folderRepo;
-    private final DoctorRepo doctorRepo;
-    private final PatientRepo patientRepo;
-    private final NoteRepo noteRepo;
+    private final FolderService folderService;
+    private final PatientService patientService;
     private final NoteService noteService;
 
-    Folder currentFolder;
+    private FolderDto currentFolder;
 
-    public FolderController(FolderRepo folderRepo, DoctorRepo doctorRepo, PatientRepo patientRepo, NoteRepo noteRepo, NoteService noteService) {
-        this.folderRepo = folderRepo;
-        this.doctorRepo = doctorRepo;
-        this.patientRepo = patientRepo;
-        this.noteRepo = noteRepo;
+    public FolderController(FolderService folderService, PatientService patientService, NoteService noteService) {
+        this.folderService = folderService;
+        this.patientService = patientService;
         this.noteService = noteService;
+
+        currentFolder = folderService.getFolderByName("root");
     }
 
     @GetMapping(value={"", "/{nextFolder}"})
-    public String getFolders(@PathVariable(required = false) Folder nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
+    public String getFolders(@PathVariable(required = false) Long nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
         if (nextFolder != null) {
-            setCurrentFolder(nextFolder);
+            setCurrentFolder(folderService.getFolderById(nextFolder));
         } else {
             setCurrentFolder();
         }
 
         model.put("parentID", getParent());
         model.put("notes", getNotes(form));
-        model.put("root", folderRepo.findByName("root"));
-        model.put("folders", currentFolder.getFolders());
-        model.put("patients", patientRepo.findAll());
+        model.put("root", folderService.getFolderByName("root"));
+        model.put("folders", currentFolder.getFoldersDto());
+        model.put("patients", patientService.getAllPatients());
         model.put("currentFolder", currentFolder);
 
         return "folders";
@@ -61,97 +67,95 @@ public class FolderController {
     }
 
     @PostMapping("/createFolder")
-    public String createFolder(@Valid Folder folder) {
-        Folder folderFromDb = folderRepo.findByParentAndName(folder.getParent(), folder.getName());
+    public String createFolder(FolderDto folder) {
+        folder.setParentFolderDto(currentFolder);
+        FolderDto folderFromDb = folderService.getFolderByParentAndName(folder.getParentFolderDto(), folder.getName());
 
         if (folderFromDb != null) {
             return "redirect:/doctor/folders/createFolder";
         }
 
-        folder.setPath(folder.getParent().getPath() + folder.getParent().getName() + "/");
+        folder.setPath(folder.getParentFolderDto().getPath() + folder.getParentFolderDto().getName() + "/");
 
-        folderRepo.save(folder);
-        currentFolder.setFolders(folderRepo.findByParent(currentFolder));
+        folderService.createOrUpdateFolder(folder);
+        currentFolder.setFoldersDto(folderService.getFoldersByParent(currentFolder));
         return "redirect:/doctor/folders/";
     }
 
-    @DeleteMapping("/{folder}")
-    public String deleteFolder(@PathVariable Folder folder) {
-        folderRepo.delete(folder);
-        currentFolder.setFolders(folderRepo.findByParent(currentFolder));
+    @DeleteMapping("/{folderId}")
+    public String deleteFolder(@PathVariable Long folderId) {
+        folderService.deleteFolderById(folderId);
+        currentFolder.setFoldersDto(folderService.getFoldersByParent(currentFolder));
         return "redirect:/doctor/folders/";
     }
 
     @GetMapping("/createNote")
     public String createNote(@RequestParam(value = "patientName", required = false) String patientName, HashMap<String, Object> model) {
         if(patientName != null){
-            model.put("patients", patientRepo.findByFullNameContainingIgnoreCase(patientName));
+            model.put("patients", patientService.getPatientsByFullName(patientName));
         }
         model.put("folderModel", currentFolder);
         return "createNote";
     }
 
     @PostMapping("/editNote")
-    public String editNotePost(@Valid Note note, HashMap<String, Object> model) {
-        Note noteFromDb = noteRepo.findByNameAndFolder(note.getName(), note.getFolder());
+    public String editNotePost(@Valid NoteDto note, HashMap<String, Object> model, @RequestParam(value = "patient") Long patientId) {
+        NoteDto noteFromDb = noteService.getNoteByNameAndFolder(note.getName(), note.getFolderDto());
 
         if (noteFromDb != null && noteFromDb.getId() != noteFromDb.getId()) {
             model.put("note", note);
             model.put("folderModel", currentFolder);
             return "redirect:/doctor/folders/editNote";
         }
-        note.setUpdateDate(Instant.now());
 
-        noteRepo.save(note);
+        note.setFolderDto(currentFolder);
+        note.setPatientDto(patientService.getPatientById(patientId));
+
+        noteService.createOrUpdateNote(note);
         return "redirect:/doctor/folders";
     }
 
-    @GetMapping("/editNote/{note}")
-    public String editNote(@PathVariable(value = "note") Note note, HashMap<String, Object> model) {
-        model.put("note", note);
-        model.put("folderModel", currentFolder);
+    @GetMapping("/editNote/{noteId}")
+    public String editNote(@PathVariable(value = "noteId") Long noteId, HashMap<String, Object> model) {
+        model.put("note", noteService.getNoteById(noteId));
+        model.put("folder", currentFolder);
         return "editNote";
     }
 
-    @DeleteMapping("/deleteNote/{note}")
-    public String deleteNote(@PathVariable(value = "note") Note note) {
-        noteRepo.delete(note);
-        currentFolder.setNotes(noteRepo.findByFolderOrderByPatientAscUpdateDateDesc(currentFolder));
+    @DeleteMapping("/deleteNote/{noteId}")
+    public String deleteNote(@PathVariable(value = "noteId") Long noteId) {
+        noteService.deleteNoteById(noteId);
+        currentFolder.setNotesDto(noteService.getNotesByFolderOrderByPatientAscUpdateDateDesc(currentFolder));
         return "redirect:/doctor/folders/";
     }
 
     @PostMapping("/createNote")
-    public String createNote(@Valid Note note, @RequestParam(value = "patient") Patient patient) {
-        noteService.createOrUpdateNote(note, patient);
+    public String createNote(@Valid NoteDto note, @RequestParam(value = "patient") Long patientId) {
+        note.setFolderDto(currentFolder);
+        note.setPatientDto(patientService.getPatientById(patientId));
+        noteService.createOrUpdateNote(note);
         return "redirect:/doctor/folders";
     }
 
     @GetMapping("/notes")
     public String getAllNotes(HashMap<String, Object> model) {
-        model.put("notes", noteRepo.findAll());
+        model.put("notes", noteService.getAllNotes());
         return "notes";
     }
 
-    private void setCurrentFolder(Folder nextFolder){
+    private void setCurrentFolder(FolderDto nextFolder){
         currentFolder = nextFolder;
     }
     private void setCurrentFolder(){
         if(currentFolder == null){
-            currentFolder = folderRepo.findByName("root");
-        }
-        if(currentFolder == null){
-            currentFolder = new Folder();
-            currentFolder.setName("root");
-            currentFolder.setPath("/");
-            folderRepo.save(currentFolder);
-            currentFolder = folderRepo.findByName("root");
+            currentFolder = folderService.getFolderByName("root");
         }
     }
 
     private Long getParent(){
-        Folder root = folderRepo.findByName("root");
-        if(currentFolder.getParent() != null){
-            return currentFolder.getParent().getId();
+        FolderDto root = folderService.getFolderByName("root");
+        if(currentFolder.getParentFolderDto() != null){
+            return currentFolder.getParentFolderDto().getId();
         } else{
             return root.getId();
         }
@@ -160,10 +164,10 @@ public class FolderController {
     private List<Note> getNotes(Map<String, String> form) {
         List notes;
         if (form.get("patient") != null && !form.get("patient").equals("")) {
-            Patient patient = patientRepo.getReferenceById(Long.valueOf(form.get("patient")));
-            notes = noteRepo.findByFolderAndPatientOrderByPatientAscUpdateDateDesc(currentFolder, patient);
+            PatientDto patient = patientService.getPatientById(Long.valueOf(form.get("patient")));
+            notes = noteService.getNotesByFolderAndPatientOrderByPatientAscUpdateDateDesc(currentFolder, patient);
         } else {
-            notes = noteRepo.findByFolderOrderByPatientAscUpdateDateDesc(currentFolder);
+            notes = noteService.getNotesByFolderOrderByPatientAscUpdateDateDesc(currentFolder);
         }
         return notes;
     }

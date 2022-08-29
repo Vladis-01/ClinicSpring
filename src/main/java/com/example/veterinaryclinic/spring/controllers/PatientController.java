@@ -1,9 +1,10 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.entities.Patient;
-import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
-import com.example.veterinaryclinic.spring.repositories.PatientRepo;
+import com.example.veterinaryclinic.spring.services.AppointmentService;
+import com.example.veterinaryclinic.spring.services.PatientService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -16,12 +17,14 @@ import java.util.*;
 @RequestMapping("/doctor/patients")
 @Transactional
 public class PatientController {
-    private final PatientRepo patientRepo;
-    private final AppoimentRepo appoimentRepo;
+    private final PatientService patientService;
+    private final AppointmentService appointmentService;
+    private final PasswordEncoder passwordEncoder;
 
-    public PatientController(PatientRepo patientRepo, AppoimentRepo appoimentRepo) {
-        this.patientRepo = patientRepo;
-        this.appoimentRepo = appoimentRepo;
+    public PatientController(PatientService patientService, AppointmentService appointmentService, PasswordEncoder passwordEncoder) {
+        this.patientService = patientService;
+        this.appointmentService = appointmentService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/createPatient")
@@ -31,46 +34,45 @@ public class PatientController {
 
     @GetMapping()
     public String getAllPatients(HashMap<String, Object> model) {
-        model.put("patients", patientRepo.findAll());
+        model.put("patients", patientService.getAllPatients());
         return "patients";
     }
 
     @PostMapping("/createPatient")
-    public String createPatient(@Valid Patient patient, BindingResult bindingResult) {
-        Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
+    public String createPatient(@Valid PatientDto patient, BindingResult bindingResult) {
+        PatientDto userFromDb = patientService.getPatientByUsername(patient.getUsername());
 
         if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/doctor/patients/createPatient";
         }
 
-        patient.setDateRegistration(new Date());
-        patient.setPassword("");
-        patient.setRole(Collections.singleton(Role.USER));
-        patientRepo.save(patient);
+
+        patientService.createOrUpdatePatient(patient);
 
         return "redirect:/doctor/patients";
     }
 
-    @GetMapping("{patient}")
-    public String editPatient(@PathVariable Patient patient, HashMap<String, Object> model){
-        model.put("appoiments", appoimentRepo.findByPatientOrderByDateAppointment(patient));
+    @GetMapping("{patientId}")
+    public String editPatient(@PathVariable Long patientId, HashMap<String, Object> model){
+        model.put("patient", patientService.getPatientById(patientId));
+        model.put("appoiments", appointmentService.getAppointmentByPatientOrderByDateAppointment(patientService.getPatientById(patientId)));
         return "editPatientForDoctor";
     }
 
     @PostMapping
-    public String editPatient(@Valid Patient patient, BindingResult bindingResult) {
-        Patient userFromDb = patientRepo.findByUsername(patient.getUsername()).orElse(null);
+    public String editPatient(@Valid PatientDto patient, BindingResult bindingResult) {
+        PatientDto userFromDb = patientService.getPatientByUsername(patient.getUsername());
 
         if (userFromDb != null && userFromDb.getId() != patient.getId() || bindingResult.hasErrors()) {
             return "redirect:/doctor/patients/{patient}";
         }
-        patientRepo.save(patient);
+        patientService.createOrUpdatePatient(patient);
         return "redirect:/doctor/patients";
     }
 
-    @DeleteMapping("/{patient}")
-    public String deleteFolder(@PathVariable Patient patient) {
-        patientRepo.delete(patient);
+    @DeleteMapping("/{patientId}")
+    public String deleteFolder(@PathVariable Long patientId) {
+        patientService.deletePatientById(patientId);
         return "redirect:/doctor/patients";
     }
 }

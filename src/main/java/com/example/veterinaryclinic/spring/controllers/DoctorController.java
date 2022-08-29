@@ -1,5 +1,6 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.DTO.DoctorDto;
 import com.example.veterinaryclinic.spring.Enums.Position;
 import com.example.veterinaryclinic.spring.Enums.Role;
 import com.example.veterinaryclinic.spring.entities.Doctor;
@@ -20,16 +21,14 @@ import java.util.stream.Stream;
 @RequestMapping("/doctor/doctors")
 @Controller
 public class DoctorController {
-    private final DoctorRepo doctorRepo;
     private final DoctorService doctorService;
 
-    public DoctorController(DoctorRepo doctorRepo, DoctorService doctorService) {
-        this.doctorRepo = doctorRepo;
+    public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
     }
 
     @GetMapping("/createDoctor")
-    public String createDoctor(Doctor doctor, HashMap<String, Object> model) {
+    public String createDoctor(HashMap<String, Object> model) {
         model.put("positions", Position.values());
         model.put("roles", Role.values());
         return "createDoctor";
@@ -37,12 +36,13 @@ public class DoctorController {
 
     @GetMapping()
     public String getAllDoctors(HashMap<String, Object> model) {
-        model.put("doctors", doctorRepo.findAll());
+        model.put("doctors", doctorService.getAllDoctors());
         return "doctors";
     }
 
-    @GetMapping("{doctor}")
-    public String editDoctor(@PathVariable Doctor doctor, HashMap<String, Object> model){
+    @GetMapping("{doctorId}")
+    public String editDoctor(@PathVariable Long doctorId, HashMap<String, Object> model){
+        DoctorDto doctor = doctorService.getDoctorById(doctorId);
         HashMap roles = (HashMap) Stream.of(Role.values()).collect(Collectors.toMap(e -> e, e -> false));
         if(doctor.getRole() != null) {
             for(Role role: doctor.getRole()){
@@ -56,6 +56,7 @@ public class DoctorController {
             }
         }
 
+        model.put("doctor", doctor);
         model.put("positions", positions);
         model.put("roles", roles);
 
@@ -63,15 +64,15 @@ public class DoctorController {
     }
 
     @PostMapping
-    public String editDoctor(@Valid Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
-        Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
+    public String editDoctor(@Valid DoctorDto doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
+        DoctorDto userFromDb = doctorService.getDoctorByUsername(doctor.getUsername());
 
         if (userFromDb != null && userFromDb.getId() != doctor.getId() || bindingResult.hasErrors()) {
             return "redirect:/doctor/doctors/{doctor}";
         }
 
         String newPassword = form.get("newPassword");
-        if(newPassword.equals("")){
+        if(!newPassword.equals("")){
             doctor.setPassword(userFromDb.getPassword());
         }else doctor.setPassword(newPassword);
 
@@ -80,8 +81,8 @@ public class DoctorController {
     }
 
     @PostMapping("/createDoctor")
-    public String createDoctor(@Valid Doctor doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
-        Doctor userFromDb = doctorRepo.findByUsername(doctor.getUsername()).orElse(null);
+    public String createDoctor(@Valid DoctorDto doctor, BindingResult bindingResult, @RequestParam Map<String, String> form) {
+        DoctorDto userFromDb = doctorService.getDoctorByUsername(doctor.getUsername());
 
         if (userFromDb != null || bindingResult.hasErrors()) {
             return "redirect:/doctor/doctors/createDoctor";
@@ -91,9 +92,9 @@ public class DoctorController {
         return "redirect:/doctor/doctors";
     }
 
-    @DeleteMapping("/{doctor}")
-    public String deleteFolder(@PathVariable Doctor doctor) {
-        doctorRepo.delete(doctor);
+    @DeleteMapping("/{doctorId}")
+    public String deleteFolder(@PathVariable Long doctorId) {
+        doctorService.deleteDoctorById(doctorId);
         return "redirect:/doctor/doctors";
     }
 }

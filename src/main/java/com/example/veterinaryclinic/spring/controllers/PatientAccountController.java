@@ -1,11 +1,16 @@
 package com.example.veterinaryclinic.spring.controllers;
 
+import com.example.veterinaryclinic.spring.DTO.DoctorDto;
+import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.Enums.Position;
 import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.entities.Patient;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
+import com.example.veterinaryclinic.spring.services.AppointmentService;
+import com.example.veterinaryclinic.spring.services.DoctorService;
+import com.example.veterinaryclinic.spring.services.PatientService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,58 +28,61 @@ import java.util.Map;
 @Controller
 @RequestMapping("/patient")
 public class PatientAccountController {
-    private final PatientRepo patientRepo;
-    private final AppoimentRepo appoimentRepo;
-    private final DoctorRepo doctorRepo;
+    private final PatientService patientService;
+    private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
     private final PasswordEncoder passwordEncoder;
 
-    public PatientAccountController(PatientRepo patientRepo, AppoimentRepo appoimentRepo, DoctorRepo doctorRepo, PasswordEncoder passwordEncoder) {
-        this.patientRepo = patientRepo;
-        this.appoimentRepo = appoimentRepo;
-        this.doctorRepo = doctorRepo;
+    public PatientAccountController(PatientService patientService, AppointmentService appointmentService, DoctorService doctorService, PasswordEncoder passwordEncoder) {
+        this.patientService = patientService;
+        this.appointmentService = appointmentService;
+        this.doctorService = doctorService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/editPatient")
     public String editPatient(@AuthenticationPrincipal Patient currentPatient, HashMap<String, Object> model) {
-        model.put("patientModel", currentPatient);
+        model.put("patient", currentPatient);
         return "editPatient";
     }
     @PostMapping("/editPatient")
     public String editPatient(@RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
-                              @AuthenticationPrincipal Patient currentPatient, @Valid Patient patient, BindingResult bindingResult) {
+                              @AuthenticationPrincipal Patient currentPatient, @Valid PatientDto patient, BindingResult bindingResult) {
 
         if(!passwordEncoder.matches(currentPassword, currentPatient.getPassword()) || bindingResult.hasErrors()){
             return "redirect:/patient/editPatient";
         }
+        patient.setDateRegistration(currentPatient.getDateRegistration());
+        patient.setPassword(currentPatient.getPassword());
 
         if(!newPassword.equals("")){
-            patient.setPassword(newPassword);
+            patient.setPassword(passwordEncoder.encode(newPassword));
         }
 
-        patientRepo.save(patient);
-        return "patientAccount";
+        patientService.createOrUpdatePatient(patient);
+        return "redirect:/patient";
     }
 
     @GetMapping()
     public String getPatientAccount(@AuthenticationPrincipal Patient currentPatient, HashMap<String, Object> model) {
-        if(currentPatient.getPassword().equals("")){
+        PatientDto patient = patientService.getPatientById(currentPatient.getId());
+        if(passwordEncoder.matches("",patient.getPassword())){ // пустой пароль
             return "redirect:/patient/editPatient";
         }
-        model.put("patientModel", currentPatient);
-        model.put("appoimentModels", appoimentRepo.findByPatientOrderByDateAppointment(currentPatient));
+        model.put("patient", patient);
+        model.put("appoiments", appointmentService.getAppointmentByPatientOrderByDateAppointment(patientService.getPatientById(currentPatient.getId())));
 
         return "patientAccount";
     }
 
     @GetMapping("/doctors")
     public String getDoctors(HashMap<String, Object> model, @RequestParam Map<String, String> form) {
-        List<Doctor> doctors;
+        List<DoctorDto> doctors;
         if (form.get("position") != null && !form.get("position").equals("")) {
             Position position = Position.valueOf(form.get("position"));
-            doctors = doctorRepo.findByPosition(position);
+            doctors = doctorService.getDoctorByPosition(position);
         } else {
-            doctors = doctorRepo.findAll();
+            doctors = doctorService.getAllDoctors().stream().toList();
         }
 
         model.put("doctors", doctors);

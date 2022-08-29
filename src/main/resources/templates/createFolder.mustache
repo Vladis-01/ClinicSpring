@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
+    <meta content="application/json"
+            charset="utf-8">
     <title>Create folder</title>
 </head>
 <body>
 Create folder
-<form action="/doctor/folders/createFolder" method="post">
+<form name="folder" action="/doctor/folders/createFolder" method="post">
     <div><label> Folder name: <input type="text" name="name" minlength="1" required /> </label></div>
-    <input type="hidden" value="{{currentFolder.id}}" name="parent">
     <div><input type="submit" value="Create"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
 

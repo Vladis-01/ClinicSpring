@@ -14,7 +14,7 @@ Edit note<br>
     Patient<br>
     <label>
         <select name="patient">
-                <option name="patient" value="{{note.patient.id}}">{{note.patient.id}}, {{note.patient.fullName}}, {{note.patient.username}}</option>
+                <option name="patient" value="{{note.patientDto.id}}">{{note.patientDto.id}}, {{note.patientDto.fullName}}, {{note.patientDto.username}}</option>
         </select>
     </label><br>
     <div><textarea name="text" minlength="1" required >{{note.text}}</textarea></div>
