@@ -1,4 +1,3 @@
-create sequence hibernate_sequence start 2 increment 1;
 
 create table appointment_status (
     appointment_id int8 not null,
