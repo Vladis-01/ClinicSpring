@@ -1,15 +1,11 @@
-package com.example.veterinaryclinic.spring.Mappings;
+package com.example.veterinaryclinic.spring.mappings;
 
 import com.example.veterinaryclinic.spring.DTO.AppointmentDto;
 import com.example.veterinaryclinic.spring.DTO.DoctorDto;
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.entities.Appointment;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 @Service
 public class MappingAppointment {

@@ -1,4 +1,4 @@
-package com.example.veterinaryclinic.spring.Enums;
+package com.example.veterinaryclinic.spring.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

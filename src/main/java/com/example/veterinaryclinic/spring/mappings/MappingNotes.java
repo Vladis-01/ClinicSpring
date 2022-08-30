@@ -1,10 +1,8 @@
-package com.example.veterinaryclinic.spring.Mappings;
+package com.example.veterinaryclinic.spring.mappings;
 
-import com.example.veterinaryclinic.spring.DTO.DoctorDto;
 import com.example.veterinaryclinic.spring.DTO.FolderDto;
 import com.example.veterinaryclinic.spring.DTO.NoteDto;
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.entities.Note;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

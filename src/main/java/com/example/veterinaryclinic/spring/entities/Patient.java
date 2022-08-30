@@ -1,6 +1,6 @@
 package com.example.veterinaryclinic.spring.entities;
 
-import com.example.veterinaryclinic.spring.Enums.Role;
+import com.example.veterinaryclinic.spring.enums.Role;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;

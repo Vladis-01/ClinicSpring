@@ -1,14 +1,10 @@
 package com.example.veterinaryclinic.spring.services;
 
 import com.example.veterinaryclinic.spring.DTO.FolderDto;
-import com.example.veterinaryclinic.spring.DTO.NoteDto;
-import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.Mappings.MappingFolder;
-import com.example.veterinaryclinic.spring.entities.Folder;
+import com.example.veterinaryclinic.spring.mappings.MappingFolder;
 import com.example.veterinaryclinic.spring.repositories.FolderRepo;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

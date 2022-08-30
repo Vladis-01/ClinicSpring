@@ -3,10 +3,9 @@ package com.example.veterinaryclinic.spring.services;
 import com.example.veterinaryclinic.spring.DTO.AppointmentDto;
 import com.example.veterinaryclinic.spring.DTO.DoctorDto;
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.Mappings.MappingAppointment;
-import com.example.veterinaryclinic.spring.Mappings.MappingDoctors;
-import com.example.veterinaryclinic.spring.Mappings.MappingPatients;
-import com.example.veterinaryclinic.spring.entities.Appointment;
+import com.example.veterinaryclinic.spring.mappings.MappingAppointment;
+import com.example.veterinaryclinic.spring.mappings.MappingDoctors;
+import com.example.veterinaryclinic.spring.mappings.MappingPatients;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import org.springframework.stereotype.Service;
 

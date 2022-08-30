@@ -1,7 +1,6 @@
 package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.Enums.Role;
 import com.example.veterinaryclinic.spring.services.AppointmentService;
 import com.example.veterinaryclinic.spring.services.PatientService;
 import org.springframework.security.crypto.password.PasswordEncoder;

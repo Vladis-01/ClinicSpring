@@ -1,8 +1,7 @@
 package com.example.veterinaryclinic.spring.DTO;
 
-import com.example.veterinaryclinic.spring.Enums.Position;
-import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.entities.Appointment;
+import com.example.veterinaryclinic.spring.enums.Position;
+import com.example.veterinaryclinic.spring.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

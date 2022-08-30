@@ -1,6 +1,6 @@
 package com.example.veterinaryclinic.spring.repositories;
 
-import com.example.veterinaryclinic.spring.Enums.Position;
+import com.example.veterinaryclinic.spring.enums.Position;
 import com.example.veterinaryclinic.spring.entities.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,8 +1,8 @@
 package com.example.veterinaryclinic.spring.services;
 
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.Mappings.MappingPatients;
+import com.example.veterinaryclinic.spring.enums.Role;
+import com.example.veterinaryclinic.spring.mappings.MappingPatients;
 import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

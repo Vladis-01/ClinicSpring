@@ -1,8 +1,6 @@
 package com.example.veterinaryclinic.spring.DTO;
 
-import com.example.veterinaryclinic.spring.Enums.Status;
-import com.example.veterinaryclinic.spring.entities.Doctor;
-import com.example.veterinaryclinic.spring.entities.Patient;
+import com.example.veterinaryclinic.spring.enums.Status;
 import lombok.Data;
 
 import java.util.Date;

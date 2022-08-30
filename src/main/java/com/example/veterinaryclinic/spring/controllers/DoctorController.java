@@ -1,15 +1,12 @@
 package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.DTO.DoctorDto;
-import com.example.veterinaryclinic.spring.Enums.Position;
-import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.entities.Doctor;
-import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
+import com.example.veterinaryclinic.spring.enums.Position;
+import com.example.veterinaryclinic.spring.enums.Role;
 import com.example.veterinaryclinic.spring.services.DoctorService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

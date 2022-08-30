@@ -1,10 +1,9 @@
 package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
-import com.example.veterinaryclinic.spring.Enums.Role;
+import com.example.veterinaryclinic.spring.enums.Role;
 import com.example.veterinaryclinic.spring.entities.Doctor;
 import com.example.veterinaryclinic.spring.entities.Patient;
-import com.example.veterinaryclinic.spring.repositories.PatientRepo;
 import com.example.veterinaryclinic.spring.services.PatientService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;

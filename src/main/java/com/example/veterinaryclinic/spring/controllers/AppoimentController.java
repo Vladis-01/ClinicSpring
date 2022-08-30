@@ -1,11 +1,7 @@
 package com.example.veterinaryclinic.spring.controllers;
 
 import com.example.veterinaryclinic.spring.DTO.AppointmentDto;
-import com.example.veterinaryclinic.spring.Enums.Status;
-import com.example.veterinaryclinic.spring.entities.Appointment;
-import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
-import com.example.veterinaryclinic.spring.repositories.DoctorRepo;
-import com.example.veterinaryclinic.spring.repositories.PatientRepo;
+import com.example.veterinaryclinic.spring.enums.Status;
 import com.example.veterinaryclinic.spring.services.AppointmentService;
 import com.example.veterinaryclinic.spring.services.DoctorService;
 import com.example.veterinaryclinic.spring.services.PatientService;

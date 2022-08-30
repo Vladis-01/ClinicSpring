@@ -1,8 +1,6 @@
 package com.example.veterinaryclinic.spring.DTO;
 
-import com.example.veterinaryclinic.spring.Enums.Role;
-import com.example.veterinaryclinic.spring.entities.Appointment;
-import com.example.veterinaryclinic.spring.entities.Note;
+import com.example.veterinaryclinic.spring.enums.Role;
 import lombok.Data;
 
 import java.util.Date;
