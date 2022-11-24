@@ -3,25 +3,67 @@
 <head>
     <meta charset="utf-8">
     <title>Edit patient</title>
+
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body>
-Edit patient
-<form action="/doctor/patients" method="post">
-    {{#patient}}
-        <div><label> Username : <input type="text" name="username" value="{{username}}" minlength="2" required /> </label></div>
-        <div><label> Full name: <input type="text" name="fullName" value="{{fullName}}" minlength="5" required /> </label></div>
-        <input type="hidden" value="{{id}}" name="id">
-    {{/patient}}
+<body style="background-image: url('/static/img/background.jpg');">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="/doctor/">
+        <img alt="Brand" class="img-responsive" src="/static/img/logo.png">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/doctor/patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/doctors">Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/appoiments">Appoiments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/folders">Folders</a>
+            </li>
 
-    <div><input type="submit" value="Save"/></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-</form>
-<form action="/doctor" method="get">
-    <div><input type="submit" value="Main"/></div>
-</form>
+        </ul>
+        <span class="navbar-text">
+            <form action="/logout" method="post">
+                <div><button type="submit" class="btn-primary">Sign Out</button></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            </form>
+    </span>
+    </div>
+</nav>
+
+<h1 class="h43">Edit patient</h1>
+
+<div class="center">
+    <form action="/doctor/patients" method="post">
+        {{#patient}}
+            <div><input type="text" name="username" value="{{username}}" minlength="2" required placeholder="Username" class="bigInput"/></div>
+            <div><input type="text" name="fullName" value="{{fullName}}" minlength="5" required placeholder="Full name" class="bigInput"/></div>
+            <input type="hidden" value="{{id}}" name="id">
+        {{/patient}}
+
+        <button type="submit" class="btn btn-primary btnEdit">Save</button>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
 
 
-<table>
+<table class="table">
     <tr>
         <th>dateAppointment</th>
         <th>price</th>
@@ -43,12 +85,12 @@ Edit patient
             <td>{{doctorDto}}</td>
             <td>
                 <form action="/doctor/appoiments/{{id}}" method="get">
-                    <div><input type="submit" value="Edit"/></div>
+                    <div><input type="submit" value="Edit" class="btn btn-primary"/></div>
                 </form>
             </td>
             <td>
                 <form action="/doctor/appoiments/{{id}}" method="post">
-                    <div><input type="submit" value="Delete"/></div>
+                    <div><input type="submit" value="Delete" class="btn btn-primary"/></div>
                     <input type="hidden" name="_method" value="delete" wfd_invisible="true">
                     <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                 </form>

@@ -3,115 +3,159 @@
 <head>
     <meta charset="utf-8">
     <title>Folders</title>
-</head>
-<body>
-<form action="/doctor/folders/createFolder" method="get">
-    <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
-    <div><input type="submit" value="Create folder"/></div>
-</form>
-<form action="/doctor/folders/createNote" method="get">
-    <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
-    <div><input type="submit" value="Create note"/></div>
-</form>
 
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</head>
+
+<body style="background-image: url('/static/img/background.jpg');">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="/doctor/">
+        <img alt="Brand" class="img-responsive" src="/static/img/logo.png">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/doctor/patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/doctors">Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/appoiments">Appoiments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/folders">Folders</a>
+            </li>
+
+        </ul>
+        <span class="navbar-text">
+            <form action="/logout" method="post">
+                <div><button type="submit" class="btn-primary">Sign Out</button></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            </form>
+    </span>
+    </div>
+</nav>
+
+<h1 class="h44">Catalog</h1>
 
 {{#currentFolder}}
-    Folder {{name}}<br>
-    {{path}}
+    <h5 class="h40">Current folder: {{name}}, {{path}}</h5>
 {{/currentFolder}}
 
-<form action="/doctor/folders/{{parentID}}" method="get">
-    <div><input type="submit" value="Above"/></div>
-</form>
+<div class="center">
 
-<form action="/doctor/folders/{{root.id}}" method="get">
-    <div><input type="submit" value="Root"/></div>
-</form>
+    <form action="/doctor/folders/createFolder" method="get">
+        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
+        <div><button type="submit" class="btn-primary bigBtn">Create folder</button></div>
+    </form>
 
-<form action="/doctor/folders/notes" method="get">
-    <div><input type="submit" value="All notes"/></div>
-</form>
+    <form action="/doctor/folders/{{parentID}}" method="get">
+        <div><button type="submit" class="btn-primary bigBtn">Above</button></div>
+    </form>
 
-Folders<br>
-<table>
-    <tr>
-        <th>name</th>
-        <th>path</th>
-    </tr>
+    <form action="/doctor/folders/{{root.id}}" method="get">
+        <div><button type="submit" class="btn-primary bigBtn">Root</button></div>
+    </form>
 
-    {{#folders}}
+</div>
+
+<h3 class="h45">Folders</h3>
+    <table class="table table-bordered table-primary">
         <tr>
-            <td>{{name}}</td>
-            <td>{{path}}</td>
-            <td>
-                <form action="/doctor/folders/{{id}}" method="get">
-                    <div><input type="submit" value="Open"/></div>
-                </form>
-            </td>
-            <td>
-                <form action="/doctor/folders/{{id}}" method="get">
-                    <div><input type="submit" value="Edit"/></div>
-                </form>
-            </td>
-            <td>
-                <form action="/doctor/folders/{{id}}" method="post">
-                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
-                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-                    <input type="submit" value="Delete"/>
-                </form>
-            </td>
+            <th>name</th>
+            <th>path</th>
         </tr>
-    {{/folders}}
-</table>
 
-<form action="/doctor/folders/{{currentFolder.id}}" method="get">
-    Patient<br>
-    <label>
-        <select name="patient">
-            <option label=""></option>
-            {{#patients}}
-                <option value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
-            {{/patients}}
-        </select>
-</label><br>
+        {{#folders}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{path}}</td>
+                <td>
+                    <form action="/doctor/folders/{{id}}" method="get">
+                        <div><input type="submit" value="Open" class="btn btn-primary"/></div>
+                    </form>
+                </td>
+                <td>
+                    <form action="/doctor/folders/{{id}}" method="get">
+                        <div><input type="submit" value="Edit" class="btn btn-primary"/></div>
+                    </form>
+                </td>
+                <td>
+                    <form action="/doctor/folders/{{id}}" method="post">
+                        <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                        <input type="submit" value="Delete" class="btn btn-primary"/>
+                    </form>
+                </td>
+            </tr>
+        {{/folders}}
+    </table>
 
-    <div><input type="submit" value="filter"/></div>
-</form>
+<div class="center">
+    <form action="/doctor/folders/createNote" method="get">
+        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
+        <div><button type="submit" class="btn-primary bigBtn">Create note</button></div>
+    </form>
 
-Notes<br>
-<table>
-    <tr>
-        <th>name</th>
-        <th>patient</th>
-        <th>path</th>
-    </tr>
-{{#notes}}
-    <tr>
-        <td>{{name}}</td>
-        <td>{{patientDto.fullName}}</td>
-        <td>{{folderDto.path}}/{{folderDto.name}}</td>
-        <td>
-            <form action="/doctor/folders/editNote/{{id}}" method="get">
-                <div><input type="submit" value="Open"/></div>
-            </form>
-        </td>
-        <td>
-            <form action="/doctor/folders/deleteNote/{{id}}" method="post">
-                <div><input type="submit" value="Delete"/></div>
-                <input type="hidden" name="_method" value="delete" wfd_invisible="true">
-                <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
-            </form>
-        </td>
+    <form action="/doctor/folders/notes" method="get">
+        <div><button type="submit" class="btn-primary bigBtn">All notes</button></div>
+    </form>
 
-    </tr>
-{{/notes}}
-</table>
+    <form action="/doctor/folders/{{currentFolder.id}}" method="get">
+        <h5>Patient</h5>
+        <label>
+            <select name="patient" class="select">
+                <option label=""></option>
+                {{#patients}}
+                    <option value="{{id}}">{{id}}, {{fullName}}, {{username}}</option>
+                {{/patients}}
+            </select>
+        </label><br>
 
+        <div><button type="submit" class="btn-primary bigBtn">Filter</button></div>
+    </form>
+</div>
 
-<form action="/doctor" method="get">
-    <div><input type="submit" value="Main"/></div>
-</form>
+<h3 class="h46">Notes</h3>
+    <table class="table table-bordered table-primary">
+        <tr>
+            <th>name</th>
+            <th>patient</th>
+            <th>path</th>
+        </tr>
+        {{#notes}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{patientDto.fullName}}</td>
+                <td>{{folderDto.path}}/{{folderDto.name}}</td>
+                <td>
+                    <form action="/doctor/folders/editNote/{{id}}" method="get">
+                        <div><input type="submit" value="Open" class="btn btn-primary"/></div>
+                    </form>
+                </td>
+                <td>
+                    <form action="/doctor/folders/deleteNote/{{id}}" method="post">
+                        <div><input type="submit" value="Delete" class="btn btn-primary"/></div>
+                        <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+                    </form>
+                </td>
 
+            </tr>
+        {{/notes}}
+    </table>
 
+</div>
 </body>
 </html>

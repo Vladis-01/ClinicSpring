@@ -3,19 +3,61 @@
 <head>
     <meta charset="utf-8">
     <title>Edit appoiment</title>
+
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 </head>
-<body>
-Edit appoiment
-<form action="/doctor/appoiments/" method="post">
+<body style="background-image: url('/static/img/background.jpg');">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="/doctor/">
+        <img alt="Brand" class="img-responsive" src="/static/img/logo.png">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/doctor/patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/doctors">Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/appoiments">Appoiments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/folders">Folders</a>
+            </li>
+
+        </ul>
+        <span class="navbar-text">
+            <form action="/logout" method="post">
+                <div><button type="submit" class="btn-primary">Sign Out</button></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            </form>
+    </span>
+    </div>
+</nav>
+
+<h1 class="h41">Edit appoiment</h1>
+
+<form action="/doctor/appoiments/" method="post" class="center">
     {{#appoiment}}
-        <div><label> Date appoiment : <input type="datetime-local" value="{{dateAppointment}}" name="dateAppoiment" required /> </label></div>
-        <div><label> Price: <input type="number" step="0.01" name="price" value="{{price}}" minlength="1" required /> </label></div>
-        <div><label> Description: <textarea name="description" minlength="1" required >{{description}}</textarea></label></div>
+        <div><label> Date appoiment : <input type="datetime-local" value="{{dateAppointment}}" name="dateAppoiment" required class="select"/> </label></div>
+        <div><label> Price: <input type="number" step="0.01" name="price" value="{{price}}" minlength="1" required class="select"/> </label></div>
+        <div><label> Description: <textarea name="description" minlength="1" required class="textarea">{{description}}</textarea></label></div>
         <input type="hidden" value="{{id}}" name="id">
     {{/appoiment}}
 
     Doctor
-    <select name="doctor">
+    <select name="doctor" class="select">
         {{#doctors}}
             {{#entrySet}}
                 <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>
@@ -24,7 +66,7 @@ Edit appoiment
     </select>
     <br>
     Patient
-    <select name="patient">
+    <select name="patient" class="select">
         {{#patients}}
             {{#entrySet}}
                 <option value="{{key.id}}" {{#value}}selected{{/value}}>{{key}}</option>
@@ -32,7 +74,7 @@ Edit appoiment
         {{/patients}}
     </select><br>
     Status<br>
-    <select name="status">
+    <select name="status" class="select">
         {{#statuses}}
             {{#entrySet}}
                 <option value="{{key}}" {{#value}}selected{{/value}}>{{key}}</option>
@@ -40,11 +82,8 @@ Edit appoiment
         {{/statuses}}
     </select><br>
 
-    <div><input type="submit" value="Save"/></div>
+    <div><input type="submit" value="Save" class="btn-primary bigBtn"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-</form>
-<form action="/doctor" method="get">
-    <div><input type="submit" value="Main"/></div>
 </form>
 
 </body>

@@ -3,16 +3,51 @@
 <head>
     <meta charset="utf-8">
     <title>Main page </title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 </head>
-<body>
+<body style="background-image: url('/static/img/background.jpg');">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="/doctor/">
+        <img alt="Brand" class="img-responsive" src="/static/img/logo.png">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/doctors">Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/appoiments">Appoiments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/folders">Folders</a>
+            </li>
 
-<form action="/doctor/appoiments/createAppoiment" method="get">
-    <div><input type="submit" value="Create"/></div>
-</form>
+        </ul>
+        <span class="navbar-text">
+            <form action="/logout" method="post">
+                <div><button type="submit" class="btn-primary">Sign Out</button></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            </form>
+    </span>
+    </div>
+</nav>
 
-All appoiments
+<h1 class="h41">All appoiments</h1>
 
-<table>
+<table class="table table-bordered table-primary">
     <tr>
         <th>dateAppointment</th>
         <th>price</th>
@@ -34,22 +69,22 @@ All appoiments
             <td>{{doctorDto}}</td>
             <td>
                 <form action="/doctor/appoiments/{{id}}" method="get">
-                    <div><input type="submit" value="Edit"/></div>
+                    <div><input type="submit" value="Edit" class="btn btn-primary"/></div>
                 </form>
             </td>
             <td>
                 <form action="/doctor/doctors/{{id}}" method="post">
                     <input type="hidden" name="_method" value="delete" wfd_invisible="true">
                     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-                    <input type="submit" value="Delete"/>
+                    <input type="submit" value="Delete" class="btn btn-primary"/>
                 </form>
             </td>
         </tr>
     {{/appoiments}}
 </table>
 
-<form action="/doctor" method="get">
-    <div><input type="submit" value="Main"/></div>
+<form action="/doctor/appoiments/createAppoiment" method="get" class="center">
+    <button type="submit" class="btn btn-primary bigBtn">Create</button>
 </form>
 
 </body>

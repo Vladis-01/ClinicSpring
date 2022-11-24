@@ -3,20 +3,31 @@
 <head>
     <meta charset="utf-8">
     <title>Login doctor</title>
+
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 </head>
-<body>
-Login page
-<form action="/login" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-    <div><input type="submit" value="Sign In"/></div>
-</form>
-<form action="/registration" method="get">
-    <div><input type="submit" value="Registration"/></div>
-</form>
-<form action="/" method="get">
-    <div><input type="submit" value="Exit"/></div>
-</form>
+<body style="background-image: url('/static/img/background.jpg');">
+<h1 class="loginH">Login</h1>
+<div class="center">
+    <form action="/login" method="post">
+        <div><input type="text" name="username" placeholder="Email" class="bigInput"/></div>
+        <div><input type="password" name="password" placeholder="Password" class="bigInput"/></div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <button type="submit" class="btn btn-primary bigBtn">Sign In</button>
+    </form>
+    <form action="/registration" method="get">
+        <button type="submit" class="btn btn-primary bigBtn">Registration</button>
+    </form>
+    <form action="/" method="get">
+        <button type="submit" class="btn btn-primary bigBtn">Exit</button>
+    </form>
+</div>
 </body>
 </html>
