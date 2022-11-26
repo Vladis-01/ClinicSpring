@@ -3,12 +3,16 @@ package com.example.veterinaryclinic.spring.services;
 import com.example.veterinaryclinic.spring.DTO.AppointmentDto;
 import com.example.veterinaryclinic.spring.DTO.DoctorDto;
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
+import com.example.veterinaryclinic.spring.entities.Appointment;
+import com.example.veterinaryclinic.spring.enums.Status;
 import com.example.veterinaryclinic.spring.mappings.MappingAppointment;
 import com.example.veterinaryclinic.spring.mappings.MappingDoctors;
 import com.example.veterinaryclinic.spring.mappings.MappingPatients;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,8 +54,22 @@ public class AppointmentService {
         return mappingAppointment.mapToAppointmentDto(appoimentRepo.findById(id).orElse(null));
     }
 
+    public List<AppointmentDto> getAppointmentsByDateAppointmentBeforeByStatus(Date dateAppoiment, Status status){
+        return appoimentRepo.findByDateAppointmentBeforeAndStatus(dateAppoiment, status).stream()
+                .map(mappingAppointment::mapToAppointmentDto)
+                .collect(Collectors.toList());
+    }
+
     public void createOrUpdateAppointment(AppointmentDto appointment){
         appoimentRepo.save(mappingAppointment.mapToAppointmentEntity(appointment));
+    }
+
+    public void createOrUpdateAppointments(List<AppointmentDto> appointmentListDTO){
+        List appointmentList = new ArrayList<Appointment>();
+        for (AppointmentDto appointmentDto: appointmentListDTO) {
+            appointmentList.add(mappingAppointment.mapToAppointmentEntity(appointmentDto));
+        }
+        appoimentRepo.saveAll(appointmentList);
     }
 
     public void deleteAppointment(AppointmentDto appointment){

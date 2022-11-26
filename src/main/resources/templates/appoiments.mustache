@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Main page </title>
+    <link rel="shortcut icon" href="/static/img/logo.png" type="image/png">
     <link rel="stylesheet" href="/static/style.css" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -73,7 +74,7 @@
                 </form>
             </td>
             <td>
-                <form action="/doctor/doctors/{{id}}" method="post">
+                <form action="/doctor/appoiments/{{id}}" method="post">
                     <input type="hidden" name="_method" value="delete" wfd_invisible="true">
                     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
                     <input type="submit" value="Delete" class="btn btn-primary"/>

@@ -1,0 +1,98 @@
+form input {
+    margin: 5px 0;
+    text-align: center;
+}
+
+.select{
+    margin-top: 2%;
+    margin-bottom: 4%;
+    width: 300px;
+    height: 30px;
+}
+
+.checkbox{
+    margin-top: 10%;
+    margin-right: 50%;
+}
+
+.textarea{
+    margin-top: 2%;
+    width: 300px;
+    height: 100px;
+}
+
+.h40{
+    margin-left: 40%;
+    margin-top: 1%;
+}
+
+.h41{
+    margin-left: 41%;
+    margin-top: 1%;
+}
+
+.h42{
+    margin-left: 42%;
+    margin-top: 1%;
+}
+
+.h43{
+    margin-left: 43%;
+    margin-top: 1%;
+}
+
+.h44{
+    margin-left: 44%;
+    margin-top: 1%;
+}
+
+.h45{
+    margin-left: 45%;
+    margin-top: 1%;
+}
+
+.h46{
+    margin-left: 46%;
+    margin-top: 1%;
+}
+
+.center {
+    margin-left: 40%;
+    margin-right: auto;
+    margin-top: 2%;
+    width: 6em;
+}
+
+.welcomeH {
+    margin-left: 28%;
+    margin-top: 10%;
+}
+
+.bigBtn{
+    margin-top: 15%;
+    width: 300px;
+    height: 60px;
+}
+
+.bigInput{
+    margin-top: 15%;
+    width: 300px;
+    height: 60px;
+}
+
+.btnEdit{
+    margin-top: 15%;
+    margin-bottom: 15%;
+    width: 300px;
+    height: 60px;
+}
+
+.loginH {
+    margin-left: 45%;
+    margin-top: 10%;
+}
+
+.registrationH {
+    margin-left: 42%;
+    margin-top: 10%;
+}
