@@ -3,6 +3,7 @@ package com.example.veterinaryclinic.spring.controllers;
 import com.example.veterinaryclinic.spring.DTO.PatientDto;
 import com.example.veterinaryclinic.spring.services.AppointmentService;
 import com.example.veterinaryclinic.spring.services.PatientService;
+import io.swagger.annotations.Api;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;

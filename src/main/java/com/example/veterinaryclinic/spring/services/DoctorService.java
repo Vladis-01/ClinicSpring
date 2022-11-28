@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +61,7 @@ public class DoctorService implements UserDetailsService {
         doctorRepo.deleteById(doctorDtoId);
     }
 
+    @Transactional
     public void createOrUpdateDoctor(DoctorDto doctor, Map<String, String> form){
         Set<String> positions = Arrays.stream(Position.values())
                 .map(Position::name)

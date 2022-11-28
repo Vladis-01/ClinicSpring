@@ -10,6 +10,7 @@ import com.example.veterinaryclinic.spring.mappings.MappingDoctors;
 import com.example.veterinaryclinic.spring.mappings.MappingPatients;
 import com.example.veterinaryclinic.spring.repositories.AppoimentRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,10 +61,12 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void createOrUpdateAppointment(AppointmentDto appointment){
         appoimentRepo.save(mappingAppointment.mapToAppointmentEntity(appointment));
     }
 
+    @Transactional
     public void createOrUpdateAppointments(List<AppointmentDto> appointmentListDTO){
         List appointmentList = new ArrayList<Appointment>();
         for (AppointmentDto appointmentDto: appointmentListDTO) {

@@ -8,6 +8,7 @@ import com.example.veterinaryclinic.spring.mappings.MappingNotes;
 import com.example.veterinaryclinic.spring.mappings.MappingPatients;
 import com.example.veterinaryclinic.spring.repositories.NoteRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class NoteService {
         this.mappingFolder = mappingFolder;
     }
 
+    @Transactional
     public void createOrUpdateNote(NoteDto note){
         noteRepo.save(mappingNotes.mapToNoteEntity(note));
     }

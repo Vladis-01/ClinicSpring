@@ -4,6 +4,7 @@ import com.example.veterinaryclinic.spring.DTO.FolderDto;
 import com.example.veterinaryclinic.spring.mappings.MappingFolder;
 import com.example.veterinaryclinic.spring.repositories.FolderRepo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class FolderService {
         this.folderRepo = folderRepo;
     }
 
+    @Transactional
     public void createOrUpdateFolder(FolderDto folder){
         folderRepo.save(mappingFolder.mapToFolderEntity(folder));
     }
