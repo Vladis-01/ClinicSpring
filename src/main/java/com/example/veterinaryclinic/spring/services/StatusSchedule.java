@@ -22,7 +22,7 @@ public class StatusSchedule {
         this.appointmentService = appointmentService;
     }
 
-    @SchedulerLock(name = "task_lock", lockAtLeastFor = "PT10M")
+    @SchedulerLock(name = "task_lock", lockAtLeastFor = "PT60M")
     @Scheduled(fixedDelay = 1000, initialDelay = 1000)
     public void checkStatusAppoiment() throws InterruptedException {
         Instant before = Instant.now().minus(Duration.ofHours(1));
