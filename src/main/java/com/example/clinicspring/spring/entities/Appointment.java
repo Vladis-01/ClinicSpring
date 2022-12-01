@@ -24,6 +24,9 @@ public class Appointment {
     private Double price;
     private String description;
 
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Set<Medicine> medicines;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
@@ -39,5 +42,4 @@ public class Appointment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
     private Set<Status> status;
-
 }

@@ -4,6 +4,7 @@ import com.example.clinicspring.spring.enums.Status;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,6 +20,8 @@ public class AppointmentDto {
     private DoctorDto doctorDto;
 
     private PatientDto patientDto;
+
+    private List<MedicineDto> medicinesDto;
 
     private Set<Status> status;
 }

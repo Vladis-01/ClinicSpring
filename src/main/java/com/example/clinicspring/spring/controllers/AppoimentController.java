@@ -1,12 +1,21 @@
 package com.example.clinicspring.spring.controllers;
 
 import com.example.clinicspring.spring.DTO.AppointmentDto;
+import com.example.clinicspring.spring.DTO.MedicineDto;
 import com.example.clinicspring.spring.enums.Status;
 import com.example.clinicspring.spring.services.AppointmentService;
 import com.example.clinicspring.spring.services.DoctorService;
+import com.example.clinicspring.spring.services.MedicineService;
 import com.example.clinicspring.spring.services.PatientService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.text.DateFormat;
@@ -23,10 +32,18 @@ public class AppoimentController {
     private final DoctorService doctorService;
     private final PatientService patientService;
 
-    public AppoimentController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
+    private final MedicineService medicineService;
+
+    @Value("${rlsr.password}")
+    private String password;
+    @Value("${rlsr.urlGetInventory}")
+    private String urlRlsrGetInventory;
+
+    public AppoimentController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService, MedicineService medicineService) {
         this.appointmentService = appointmentService;
         this.doctorService = doctorService;
         this.patientService = patientService;
+        this.medicineService = medicineService;
     }
 
     @GetMapping()
@@ -49,6 +66,7 @@ public class AppoimentController {
         appointment.setPatientDto(patientService.getPatientById(Long.valueOf(form.get("patient"))));
         appointment.setDoctorDto(doctorService.getDoctorById(Long.valueOf(form.get("doctor"))));
         appointment.setStatus(Collections.singleton(Status.valueOf(form.get("status"))));
+        appointment.setMedicinesDto(new ArrayList<>());
 
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
         Date date = formatter.parse(form.get("date"));
@@ -65,30 +83,57 @@ public class AppoimentController {
         return "redirect:/doctor/appoiments";
     }
 
-    @GetMapping("{appointmentId}")
-    public String editAppointment(@PathVariable Long appointmentId, HashMap<String, Object> model){
-        AppointmentDto appointment = appointmentService.getAppointmentById(appointmentId);
+    @GetMapping(value = {"{appointmentId}"})
+    public String editAppointment(@PathVariable Long appointmentId, @RequestParam(required = false) Map<String, String> form, HashMap<String, Object> model){
+
+        AppointmentDto appointmentDto = appointmentService.getAppointmentById(appointmentId);
 
         HashMap statuses = (HashMap) Stream.of(Status.values()).collect(Collectors.toMap(e -> e, e -> false));
-        if(appointment.getStatus() != null) {
-            for(Status status: appointment.getStatus()){
+        if(appointmentDto.getStatus() != null) {
+            for(Status status: appointmentDto.getStatus()){
                 statuses.replace(status, true);
             }
         }
+
         HashMap doctors = (HashMap) Stream.of(doctorService.getAllDoctors().toArray()).collect(Collectors.toMap(e -> e, e -> false));
-        if(appointment.getDoctorDto() != null) {
-            doctors.replace(appointment.getDoctorDto(), true);
+        if(appointmentDto.getDoctorDto() != null) {
+            doctors.replace(appointmentDto.getDoctorDto(), true);
         }
+
         HashMap patients = (HashMap) Stream.of(patientService.getAllPatients().toArray()).collect(Collectors.toMap(e -> e, e -> false));
-        if(appointment.getPatientDto() != null) {
-            patients.replace(appointment.getPatientDto(), true);
+        if(appointmentDto.getPatientDto() != null) {
+            patients.replace(appointmentDto.getPatientDto(), true);
+        }
+
+        List<MedicineDto> medicinesDto = new ArrayList<>();
+        for (MedicineDto medicineDto: appointmentDto.getMedicinesDto()) {
+            medicinesDto.add(searchMedicine(medicineDto.getPackingId()));
+        }
+        if(form.get("medicineName") != null){
+            model.put("medicinesFromRLSR", searchMedicines(form.get("medicineName")));
         }
 
         model.put("statuses", statuses);
         model.put("doctors", doctors);
         model.put("patients", patients);
-        model.put("appoiment", appointment);
+        model.put("appoiment", appointmentDto);
+        model.put("medicines", medicinesDto);
+
         return "editAppoiment";
+    }
+
+    @PostMapping("/{appointmentId}/addMedicine")
+    public String addMedicine(@PathVariable Long appointmentId, @RequestParam Long medicinePackingId, HashMap<String, Object> model) throws ParseException {
+        MedicineDto medicineDto = searchMedicine(medicinePackingId);
+
+        AppointmentDto appointmentDto = appointmentService.getAppointmentById(appointmentId);
+        if(medicineService.getMedicineByPackingIdAndAppointment(medicineDto.getPackingId(), appointmentDto) != null){
+            return "redirect:/doctor/appoiments/{appointmentId}";
+        }
+        medicineDto.setValueAppointment(appointmentDto);
+        medicineService.createOrUpdateMedicine(medicineDto);
+
+        return "redirect:/doctor/appoiments/{appointmentId}";
     }
 
     @PostMapping
@@ -105,7 +150,7 @@ public class AppoimentController {
                 appointment.getDoctorDto(), appointment.getDateAppointment(), appointment.getPatientDto());
 
         if (appoimentFromDb != null) {
-            return "redirect:/doctor/editAppoiments";
+            return "redirect:/doctor/appoiments/" + appointment.getId();
         }
 
         appointmentService.createOrUpdateAppointment(appointment);
@@ -116,5 +161,32 @@ public class AppoimentController {
     public String deleteFolder(@PathVariable Long appointmentId) {
         appointmentService.deleteAppointmentById(appointmentId);
         return "redirect:/doctor/appoiments";
+    }
+
+    public List<MedicineDto> searchMedicines(String name) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", password);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<MedicineDto>> response = restTemplate.exchange(urlRlsrGetInventory + "?tn_like=" + name, //
+                HttpMethod.GET, request, new ParameterizedTypeReference<List<MedicineDto>>(){});
+
+        List<MedicineDto> medicinesDto = response.getBody();
+
+        return medicinesDto.stream().filter(med -> med.getType().equals("Лекарственные средства")).toList();
+    }
+
+    public MedicineDto searchMedicine(Long packingId){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", password);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<MedicineDto> response = restTemplate.exchange(urlRlsrGetInventory + "?packing_id=" + packingId, //
+                HttpMethod.GET, request, MedicineDto.class);
+        MedicineDto medicineDto = response.getBody();
+
+        return medicineDto;
     }
 }

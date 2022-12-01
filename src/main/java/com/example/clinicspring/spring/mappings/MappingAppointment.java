@@ -1,18 +1,22 @@
 package com.example.clinicspring.spring.mappings;
 
-import com.example.clinicspring.spring.DTO.AppointmentDto;
-import com.example.clinicspring.spring.DTO.DoctorDto;
-import com.example.clinicspring.spring.DTO.PatientDto;
+import com.example.clinicspring.spring.DTO.*;
 import com.example.clinicspring.spring.entities.Appointment;
+import com.example.clinicspring.spring.entities.Medicine;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MappingAppointment {
     private final ModelMapper modelMapper;
+    private final MappingMedicines mappingMedicines;
 
-    public MappingAppointment(ModelMapper modelMapper) {
+    public MappingAppointment(ModelMapper modelMapper, MappingMedicines mappingMedicines) {
         this.modelMapper = modelMapper;
+        this.mappingMedicines = mappingMedicines;
     }
 
     //из entity в dto
@@ -27,6 +31,16 @@ public class MappingAppointment {
         }
         if(appointment.getPatient() != null){
             appointmentDto.setPatientDto(modelMapper.map(appointment.getPatient(), PatientDto.class));
+        }
+        List<MedicineDto> medicineDtoList = new ArrayList<>();
+        if(appointment.getMedicines() != null){
+            for (Medicine medicine: appointment.getMedicines()) {
+                MedicineDto medicineDto = new MedicineDto();
+                medicineDto.setValueId(medicine.getId());
+                medicineDto.setValuePackingId(medicine.getPackingId());
+                medicineDtoList.add(medicineDto);
+            }
+            appointmentDto.setMedicinesDto(medicineDtoList);
         }
 
         return appointmentDto;

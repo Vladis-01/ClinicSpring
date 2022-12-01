@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
 <head>
-    <meta charset="utf-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Edit appoiment</title>
 
     <link rel="shortcut icon" href="/static/img/logo.png" type="image/png">
@@ -83,9 +84,58 @@
         {{/statuses}}
     </select><br>
 
+
+
     <div><input type="submit" value="Save" class="btn-primary bigBtn"/></div>
     <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
 </form>
+
+<form action="/doctor/appoiments/{{appoiment.id}}" method="get">
+    <div><input type="search" name="medicineName" minlength="1" placeholder="Medicine name(at least 3 first letters)" class="bigInput"/></div>
+    <div><button type="submit" class="btn-primary bigBtn">Search</button></div>
+</form>
+
+<form action="/doctor/appoiments/{{appoiment.id}}/addMedicine" method="post">
+
+    Medicine name<br>
+    <label>
+        <select name="medicinePackingId" class="select">
+            {{#medicinesFromRLSR}}
+                <option name="medicinePackingId" value="{{packingId}}">{{name}}, {{dose}}, {{dosageForm}}</option>
+            {{/medicinesFromRLSR}}
+        </select>
+    </label><br>
+    <div><button type="submit" class="btn-primary bigBtn">Add</button></div>
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+</form>
+
+<table class="table table-bordered table-primary">
+    <tr>
+        <th>Name</th>
+        <th>Dose</th>
+        <th>Dosage form</th>
+    </tr>
+
+    {{#medicines}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{dose}}</td>
+            <td>{{dosageForm}}</td>
+            <td>
+                <form action="/doctor/appoiments/{{id}}" method="get">
+                    <div><input type="submit" value="Edit" class="btn btn-primary"/></div>
+                </form>
+            </td>
+            <td>
+                <form action="/doctor/appoiments/{{id}}" method="post">
+                    <input type="hidden" name="_method" value="delete" wfd_invisible="true">
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                    <input type="submit" value="Delete" class="btn btn-primary"/>
+                </form>
+            </td>
+        </tr>
+    {{/medicines}}
+</table>
 
 </body>
 </html>

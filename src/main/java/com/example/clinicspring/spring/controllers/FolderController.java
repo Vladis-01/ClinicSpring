@@ -1,6 +1,7 @@
 package com.example.clinicspring.spring.controllers;
 
 import com.example.clinicspring.spring.DTO.FolderDto;
+import com.example.clinicspring.spring.DTO.MedicineDto;
 import com.example.clinicspring.spring.DTO.NoteDto;
 import com.example.clinicspring.spring.DTO.PatientDto;
 import com.example.clinicspring.spring.entities.Folder;
@@ -67,7 +68,6 @@ public class FolderController {
         }
 
         folder.setPath(folder.getParentFolderDto().getPath() + folder.getParentFolderDto().getName() + "/");
-
         folderService.createOrUpdateFolder(folder);
         currentFolder.setFoldersDto(folderService.getFoldersByParent(currentFolder));
         return "redirect:/doctor/folders/";

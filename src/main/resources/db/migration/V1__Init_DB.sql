@@ -66,6 +66,14 @@ create table patients (
     primary key (id)
 );
 
+
+create table medicines (
+    id int8 not null,
+    packing_id int8,
+    appointment_id int8,
+    primary key (id)
+);
+
 alter table if exists appointment_status
     add constraint appointment_status_appointment_fk
     foreign key (appointment_id)
