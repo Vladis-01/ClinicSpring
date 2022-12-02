@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Medicine</title>
+
+    <link rel="shortcut icon" href="/static/img/logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</head>
+<body style="background-image: url('/static/img/background.jpg');">
+<nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="/doctor/">
+        <img alt="Brand" class="img-responsive" src="/static/img/logo.png">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/doctor/patients">Patients</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/doctors">Doctors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/appoiments">Appoiments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/doctor/folders">Folders</a>
+            </li>
+
+        </ul>
+        <span class="navbar-text">
+            <form action="/logout" method="post">
+                <div><button type="submit" class="btn-primary">Sign Out</button></div>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            </form>
+    </span>
+    </div>
+</nav>
+<h1 class="h42">Medicine</h1>
+
+<div class="center">
+    {{#medicine}}
+        <h5 class="hMedicine">Name</h5>
+        <div><input type="text" value="{{name}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Dosage</h5>
+        <div><input type="text" value="{{dose}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Release form</h5>
+        <div><input type="text" value="{{dosageForm}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Total Items per Package</h5>
+        <div><input type="text" value="{{amount}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Manufacturer</h5>
+        <div><input type="text" value="{{firm}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Manufacturer country</h5>
+        <div><input type="text" value="{{country}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Expiry date in months</h5>
+        <div><input type="text" value="{{ltMonth}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Packing Description</h5>
+        <div><textarea type="text" readonly class="textarea"/>{{packingFull}}</textarea></div>
+        <h5 class="hMedicine">Storage conditions</h5>
+        <div><textarea type="text" readonly class="textarea"/>{{sc}}</textarea></div>
+        <h5 class="hMedicine">Date of registration</h5>
+        <div><input type="datetime-local" value="{{regDate}}" readonly class="select"/></div>
+    {{/medicine}}
+    <form action="/doctor/appoiments/{{apppointmentId}}" method="get">
+        <div><button type="submit" class="btn-primary bigBtn">Back</button></div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
+
+</body>
+</html>
