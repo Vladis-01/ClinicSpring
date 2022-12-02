@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
 <head>
-    <meta charset="utf-8">
-    <title>Patient account</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Edit appoiment</title>
 
     <link rel="shortcut icon" href="/static/img/logo.png" type="image/png">
     <link rel="stylesheet" href="/static/style.css" type="text/css">
@@ -40,43 +41,43 @@
     </span>
     </div>
 </nav>
-<h1 class="h45">Your data</h1>
 
-<table class="table">
+<h1 class="h40">Your appoiment</h1>
+<div class="center">
+    {{#appoiment}}
+        <div><label> Date appoiment : <input type="datetime-local" value="{{dateAppointment}}" name="dateAppoiment" required class="select" readonly/> </label></div>
+        <div><label> Price: <input type="number" step="0.01" name="price" value="{{price}}" minlength="1" required class="select" readonly/> </label></div>
+        <div><label> Patient: <input type="text" name="patientName" value="{{patientDto.fullName}}" minlength="1" placeholder="Patient name" class="bigInputAppointment" readonly/></label></div>
+        <div><label> Doctor: <input type="text" name="doctorName" value="{{doctorDto.fullName}}" minlength="1" class="bigInputAppointment" readonly/></label></div>
+        <div><label> Status: <input type="text" name="status" value="{{status}}" minlength="1" class="bigInputAppointment" readonly/></label></div>
+        <div><label> Description: <textarea name="description" minlength="1" required class="textarea" readonly>{{description}}</textarea></label></div>
+    {{/appoiment}}
+
+</div>
+
+<form action="/patient" method="get" class="center">
+    <div><input type="submit" value="Back" class="btn-primary bigBtn"/></div>
+</form>
+
+<table class="table table-bordered table-primary">
     <tr>
-        <th>username</th>
-        <th>fullName</th>
+        <th>Name</th>
+        <th>Dose</th>
+        <th>Dosage form</th>
     </tr>
 
-    {{#patient}}
+    {{#medicines}}
         <tr>
-            <td>{{username}}</td>
-            <td>{{fullName}}</td>
-        </tr>
-    {{/patient}}
-</table>
-
-<h3 class="h41">Your appoiments</h3>
-
-<table class="table">
-    <tr>
-        <th>date</th>
-        <th>status</th>
-        <th>doctor name</th>
-    </tr>
-
-    {{#appoiments}}
-        <tr>
-            <td>{{dateAppointment}}</td>
-            <td>{{status}}</td>
-            <td>{{doctorDto.fullName}}</td>
+            <td>{{name}}</td>
+            <td>{{dose}}</td>
+            <td>{{dosageForm}}</td>
             <td>
-                <form action="/patient/appoiment/{{id}}" method="get">
+                <form action="/patient/appoiment/{{appoiment.id}}/medicine/{{packingId}}" method="get">
                     <div><input type="submit" value="Open" class="btn btn-primary"/></div>
                 </form>
             </td>
         </tr>
-    {{/appoiments}}
+    {{/medicines}}
 </table>
 
 </body>

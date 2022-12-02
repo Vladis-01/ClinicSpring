@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>Patient account</title>
+    <title>Medicine</title>
 
     <link rel="shortcut icon" href="/static/img/logo.png" type="image/png">
     <link rel="stylesheet" href="/static/style.css" type="text/css">
@@ -40,44 +40,35 @@
     </span>
     </div>
 </nav>
-<h1 class="h45">Your data</h1>
+<h1 class="h42">Medicine</h1>
 
-<table class="table">
-    <tr>
-        <th>username</th>
-        <th>fullName</th>
-    </tr>
-
-    {{#patient}}
-        <tr>
-            <td>{{username}}</td>
-            <td>{{fullName}}</td>
-        </tr>
-    {{/patient}}
-</table>
-
-<h3 class="h41">Your appoiments</h3>
-
-<table class="table">
-    <tr>
-        <th>date</th>
-        <th>status</th>
-        <th>doctor name</th>
-    </tr>
-
-    {{#appoiments}}
-        <tr>
-            <td>{{dateAppointment}}</td>
-            <td>{{status}}</td>
-            <td>{{doctorDto.fullName}}</td>
-            <td>
-                <form action="/patient/appoiment/{{id}}" method="get">
-                    <div><input type="submit" value="Open" class="btn btn-primary"/></div>
-                </form>
-            </td>
-        </tr>
-    {{/appoiments}}
-</table>
-
+<div class="center">
+    {{#medicine}}
+        <h5 class="hMedicine">Name</h5>
+        <div><input type="text" value="{{name}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Dosage</h5>
+        <div><input type="text" value="{{dose}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Release form</h5>
+        <div><input type="text" value="{{dosageForm}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Total Items per Package</h5>
+        <div><input type="text" value="{{amount}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Manufacturer</h5>
+        <div><input type="text" value="{{firm}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Manufacturer country</h5>
+        <div><input type="text" value="{{country}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Expiry date in months</h5>
+        <div><input type="text" value="{{ltMonth}}" readonly class="bigInputMedicine"/></div>
+        <h5 class="hMedicine">Packing Description</h5>
+        <div><textarea type="text" readonly class="textarea"/>{{packingFull}}</textarea></div>
+        <h5 class="hMedicine">Storage conditions</h5>
+        <div><textarea type="text" readonly class="textarea"/>{{sc}}</textarea></div>
+        <h5 class="hMedicine">Date of registration</h5>
+        <div><input type="datetime-local" value="{{regDate}}" readonly class="select"/></div>
+    {{/medicine}}
+    <form action="/patient/appoiment/{{appointmentId}}" method="get">
+        <div><button type="submit" class="btn-primary bigBtn">Back</button></div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+    </form>
+</div>
 </body>
 </html>

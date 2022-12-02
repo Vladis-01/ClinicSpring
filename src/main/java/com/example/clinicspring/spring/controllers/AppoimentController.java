@@ -36,6 +36,7 @@ public class AppoimentController {
 
     @Value("${rlsr.password}")
     private String password;
+
     @Value("${rlsr.urlGetInventory}")
     private String urlRlsrGetInventory;
 
