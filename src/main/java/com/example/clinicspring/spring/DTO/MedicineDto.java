@@ -3,9 +3,7 @@ package com.example.clinicspring.spring.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import lombok.Data;
 import lombok.Getter;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.io.Serializable;
 
@@ -21,37 +19,37 @@ public class MedicineDto implements Serializable {
     private long packingId;
 
     @JsonProperty(value = "trade_name_rus")
-    private String name = " ";
+    private String name = "Не найдено";
 
     @JsonProperty(value = "dose")
-    private String dose = " ";
+    private String dose = "Не найдено";
 
     @JsonProperty(value = "dosage_form_full_name")
-    private String dosageForm = " ";
+    private String dosageForm = "Не найдено";
 
     @JsonProperty(value = "amount1")
-    private String amount = " ";
+    private String amount = "Не найдено";
 
     @JsonProperty(value = "producer_tran")
-    private String firm = " ";
+    private String firm = "Не найдено";
 
     @JsonProperty(value = "producer_country")
-    private String country = " ";
+    private String country = "Не найдено";
 
     @JsonProperty(value = "lt_month")
-    private String ltMonth = " "; // Срок хранения
+    private String ltMonth = "Не найдено"; // Срок хранения
 
     @JsonProperty(value = "packing_full")
-    private String packingFull = " ";
+    private String packingFull = "Не найдено";
 
     @JsonProperty(value = "sc_name")
-    private String sc = " ";
+    private String sc = "Не найдено";
 
     @JsonProperty(value = "reg_date")
-    private String regDate = " ";
+    private String regDate = "Не найдено";
 
     @JsonProperty(value = "ntfr_name")
-    private String type = " ";
+    private String type = "Не найдено";
 
     public void setValueId(Long s) {
         if (s != null) {

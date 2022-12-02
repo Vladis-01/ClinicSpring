@@ -36,7 +36,7 @@ public class Doctor implements UserDetails {
     @Size(min=5, message = "{Size.FullName}")
     private String fullName;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Appointment> appointments;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -52,7 +52,7 @@ public class Doctor implements UserDetails {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "doctor_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
+    @Cascade(value={org.hibernate.annotations.CascadeType.DELETE})
     private Set<Position> position;
 
     @Override

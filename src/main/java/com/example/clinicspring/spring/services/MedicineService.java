@@ -30,6 +30,11 @@ public class MedicineService {
         medicineRepo.delete(mappingMedicines.mapToMedicineEntity(medicineDto));
     }
 
+    public void deleteMedicine(Long id){
+        medicineRepo.deleteById(id);
+        medicineRepo.flush();
+    }
+
     public MedicineDto getMedicineByPackingIdAndAppointment(Long packingId, AppointmentDto appointmentDto){
         return mappingMedicines.mapToMedicineDto(medicineRepo.findByPackingIdAndAppointment(packingId, mappingAppointment.mapToAppointmentEntity(appointmentDto)));
     }

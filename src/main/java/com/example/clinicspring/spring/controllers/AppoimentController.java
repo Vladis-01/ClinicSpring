@@ -107,9 +107,11 @@ public class AppoimentController {
 
         List<MedicineDto> medicinesDto = new ArrayList<>();
         for (MedicineDto medicineDto: appointmentDto.getMedicinesDto()) {
-            medicinesDto.add(searchMedicine(medicineDto.getPackingId()));
+            MedicineDto medicineFromRLSR = searchMedicine(medicineDto.getPackingId());
+            medicineFromRLSR.setValueId(medicineDto.getId());
+            medicinesDto.add(medicineFromRLSR);
         }
-        if(form.get("medicineName") != null){
+        if(form.get("medicineName") != null && form.get("medicineName") != ""){
             model.put("medicinesFromRLSR", searchMedicines(form.get("medicineName")));
         }
 
@@ -135,6 +137,14 @@ public class AppoimentController {
 
         return "redirect:/doctor/appoiments/{appointmentId}";
     }
+
+    @DeleteMapping("{appointmentId}/{medicineId}")
+    public String deleteMedicine(@PathVariable Long appointmentId, @PathVariable Long medicineId) {
+        medicineService.deleteMedicine(medicineId);
+        return "redirect:/doctor/appoiments/{appointmentId}";
+    }
+
+
 
     @PostMapping
     public String editAppoiment(@Valid AppointmentDto appointment, @RequestParam Map<String, String> form) throws ParseException {
@@ -163,18 +173,31 @@ public class AppoimentController {
         return "redirect:/doctor/appoiments";
     }
 
+    @GetMapping("/{appointmentId}/medicine/{packingId}")
+    public String openMedicine(@PathVariable Long appointmentId, @PathVariable Long packingId, HashMap<String, Object> model) {
+        MedicineDto medicineFromRLSR = searchMedicine(packingId);
+        model.put("medicine", medicineFromRLSR);
+        model.put("apppointmentId", appointmentId);
+
+        return "medicineForDoctor";
+    }
+
     public List<MedicineDto> searchMedicines(String name) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", password);
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<List<MedicineDto>> response = restTemplate.exchange(urlRlsrGetInventory + "?tn_like=" + name, //
-                HttpMethod.GET, request, new ParameterizedTypeReference<List<MedicineDto>>(){});
 
-        List<MedicineDto> medicinesDto = response.getBody();
+        try {
+            ResponseEntity<List<MedicineDto>> response = restTemplate.exchange(urlRlsrGetInventory + "?tn_like=" + name, //
+                    HttpMethod.GET, request, new ParameterizedTypeReference<List<MedicineDto>>() {});
+            List<MedicineDto> medicinesDto = response.getBody();
 
-        return medicinesDto.stream().filter(med -> med.getType().equals("Лекарственные средства")).toList();
+            return medicinesDto.stream().filter(med -> med.getType().equals("Лекарственные средства")).toList();
+        } catch (Exception e){
+            return new ArrayList<MedicineDto>();
+        }
     }
 
     public MedicineDto searchMedicine(Long packingId){

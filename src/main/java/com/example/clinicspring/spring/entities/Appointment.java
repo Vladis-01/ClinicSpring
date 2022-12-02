@@ -40,6 +40,6 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "appointment_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
+    @Cascade(value={org.hibernate.annotations.CascadeType.DELETE})
     private Set<Status> status;
 }
