@@ -44,9 +44,9 @@
 
 <form action="/patient/editPatient" method="post" class="center">
     {{#patient}}
-        <div><input type="text" name="username" value="{{username}}" minlength="2" required placeholder="Username" class="bigInput"/></div>
+        <div><input type="email" name="username" value="{{username}}" minlength="2" required placeholder="Username" class="bigInput"/></div>
         <div><input type="text" name="fullName" value="{{fullName}}" minlength="5" required placeholder="Full name" class="bigInput"/></div>
-        <div><input type="password" name="currentPassword" value="" placeholder="Current password" class="bigInput"/></div>
+        <div><input type="text" name="currentPassword" value="" placeholder="Current password" class="bigInput" title="{{passwordMessage}}"/></div>
         <div><input type="password" name="newPassword" value="" minlength="5" placeholder="New password" class="bigInput"/></div>
         <input type="hidden" value="{{id}}" name="id">
     {{/patient}}

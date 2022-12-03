@@ -18,12 +18,10 @@ import java.util.*;
 public class PatientController {
     private final PatientService patientService;
     private final AppointmentService appointmentService;
-    private final PasswordEncoder passwordEncoder;
 
-    public PatientController(PatientService patientService, AppointmentService appointmentService, PasswordEncoder passwordEncoder) {
+    public PatientController(PatientService patientService, AppointmentService appointmentService) {
         this.patientService = patientService;
         this.appointmentService = appointmentService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/createPatient")

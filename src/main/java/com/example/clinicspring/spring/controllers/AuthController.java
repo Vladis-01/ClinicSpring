@@ -19,11 +19,9 @@ import java.util.HashMap;
 @Controller
 public class AuthController {
     private final PatientService patientService;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(PatientService patientService, PasswordEncoder passwordEncoder) {
+    public AuthController(PatientService patientService) {
         this.patientService = patientService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/login")

@@ -19,7 +19,7 @@
 
 <div class="center">
     <form action="/registration" method="post">
-        <div><input type="text" name="username" placeholder="Email" minlength="2" required class="bigInput"/></div>
+        <div><input type="email" name="username" placeholder="Email" minlength="2" required class="bigInput"/></div>
         <div><input type="password" name="password" placeholder="Password" minlength="5" required class="bigInput"/></div>
         <div><input type="text" name="fullName" placeholder="Full name" minlength="5" required class="bigInput"/></div>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
