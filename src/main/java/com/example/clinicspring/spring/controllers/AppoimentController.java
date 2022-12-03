@@ -7,6 +7,7 @@ import com.example.clinicspring.spring.services.AppointmentService;
 import com.example.clinicspring.spring.services.DoctorService;
 import com.example.clinicspring.spring.services.MedicineService;
 import com.example.clinicspring.spring.services.PatientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -27,6 +28,7 @@ import java.util.stream.Stream;
 
 @RequestMapping("/doctor/appoiments")
 @Controller
+@RequiredArgsConstructor
 public class AppoimentController {
     private final AppointmentService appointmentService;
     private final DoctorService doctorService;
@@ -39,13 +41,6 @@ public class AppoimentController {
 
     @Value("${rlsr.urlGetInventory}")
     private String urlRlsrGetInventory;
-
-    public AppoimentController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService, MedicineService medicineService) {
-        this.appointmentService = appointmentService;
-        this.doctorService = doctorService;
-        this.patientService = patientService;
-        this.medicineService = medicineService;
-    }
 
     @GetMapping()
     public String getAllAppoiments(HashMap<String, Object> model) {
@@ -160,9 +155,6 @@ public class AppoimentController {
         AppointmentDto appoimentFromDb = appointmentService.getAppointmentsByDateAppointmentAndDoctorOrDateAppointmentAndPatient(appointment.getDateAppointment(),
                 appointment.getDoctorDto(), appointment.getDateAppointment(), appointment.getPatientDto());
 
-        if (appoimentFromDb != null) {
-            return "redirect:/doctor/appoiments/" + appointment.getId();
-        }
 
         appointmentService.createOrUpdateAppointment(appointment);
         return "redirect:/doctor/appoiments";

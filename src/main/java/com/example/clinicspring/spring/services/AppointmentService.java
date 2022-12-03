@@ -9,6 +9,7 @@ import com.example.clinicspring.spring.mappings.MappingAppointment;
 import com.example.clinicspring.spring.mappings.MappingDoctors;
 import com.example.clinicspring.spring.mappings.MappingPatients;
 import com.example.clinicspring.spring.repositories.AppoimentRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +19,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AppointmentService {
     private final AppoimentRepo appoimentRepo;
     private final MappingAppointment mappingAppointment;
     private final MappingDoctors mappingDoctors;
     private final MappingPatients mappingPatients;
-
-    public AppointmentService(AppoimentRepo appoimentRepo, MappingAppointment mappingAppointment, MappingDoctors mappingDoctors, MappingPatients mappingPatients) {
-        this.appoimentRepo = appoimentRepo;
-        this.mappingAppointment = mappingAppointment;
-        this.mappingDoctors = mappingDoctors;
-        this.mappingPatients = mappingPatients;
-    }
 
     public List<AppointmentDto> getAllAppointments(){
         return appoimentRepo.findAll().stream()

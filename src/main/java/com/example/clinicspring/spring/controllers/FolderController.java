@@ -19,31 +19,29 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/doctor/folders")
+
 public class FolderController {
     private final FolderService folderService;
     private final PatientService patientService;
     private final NoteService noteService;
 
-    private FolderDto currentFolder;
-
     public FolderController(FolderService folderService, PatientService patientService, NoteService noteService) {
         this.folderService = folderService;
         this.patientService = patientService;
         this.noteService = noteService;
-
-        currentFolder = folderService.getFolderByName("root");
     }
 
     @GetMapping(value={"", "/{nextFolder}"})
     public String getFolders(@PathVariable(required = false) Long nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
+        FolderDto currentFolder;
         if (nextFolder != null) {
-            setCurrentFolder(folderService.getFolderById(nextFolder));
+            currentFolder = folderService.getFolderById(nextFolder);
         } else {
-            setCurrentFolder();
+            currentFolder = getRoot();
         }
 
-        model.put("parentID", getParent());
-        model.put("notes", getNotes(form));
+        model.put("parentID", getParent(currentFolder));
+        model.put("notes", getNotes(form, currentFolder));
         model.put("root", folderService.getFolderByName("root"));
         model.put("folders", currentFolder.getFoldersDto());
         model.put("patients", patientService.getAllPatients());
@@ -53,14 +51,15 @@ public class FolderController {
     }
 
     @GetMapping("/createFolder")
-    public String createFolder(@RequestParam("currentFolder") Folder currentFolder, HashMap<String, Object> model) {
-        model.put("currentFolder", currentFolder);
+    public String createFolder(@RequestParam("currentFolder") Long currentFolder, HashMap<String, Object> model) {
+        model.put("currentFolder", folderService.getFolderById(currentFolder));
         return "createFolder";
     }
 
     @PostMapping("/createFolder")
-    public String createFolder(FolderDto folder) {
-        folder.setParentFolderDto(currentFolder);
+    public String createFolder(@RequestParam("currentFolder") Long currentFolder, FolderDto folder) {
+        FolderDto cf = folderService.getFolderById(currentFolder);
+        folder.setParentFolderDto(cf);
         FolderDto folderFromDb = folderService.getFolderByParentAndName(folder.getParentFolderDto(), folder.getName());
 
         if (folderFromDb != null) {
@@ -69,90 +68,88 @@ public class FolderController {
 
         folder.setPath(folder.getParentFolderDto().getPath() + folder.getParentFolderDto().getName() + "/");
         folderService.createOrUpdateFolder(folder);
-        currentFolder.setFoldersDto(folderService.getFoldersByParent(currentFolder));
-        return "redirect:/doctor/folders/";
+        cf.setFoldersDto(folderService.getFoldersByParent(cf));
+        return "redirect:/doctor/folders/" + currentFolder;
     }
 
     @DeleteMapping("/{folderId}")
-    public String deleteFolder(@PathVariable Long folderId) {
+    public String deleteFolder(@PathVariable Long folderId, @RequestParam("currentFolder") Long currentFolder) {
+        FolderDto cf = folderService.getFolderById(currentFolder);
         folderService.deleteFolderById(folderId);
-        currentFolder.setFoldersDto(folderService.getFoldersByParent(currentFolder));
-        return "redirect:/doctor/folders/";
+        cf.setFoldersDto(folderService.getFoldersByParent(cf));
+        return "redirect:/doctor/folders/" + currentFolder;
     }
 
     @GetMapping("/createNote")
-    public String createNote(@RequestParam(value = "patientName", required = false) String patientName, HashMap<String, Object> model) {
+    public String createNote(@RequestParam(value = "patientName", required = false) String patientName, @RequestParam("currentFolder") Long currentFolder, HashMap<String, Object> model) {
         if(patientName != null){
             model.put("patients", patientService.getPatientsByFullName(patientName));
         }
-        model.put("folderModel", currentFolder);
+        model.put("folderModel", folderService.getFolderById(currentFolder));
         return "createNote";
     }
 
     @PostMapping("/editNote")
-    public String editNotePost(@Valid NoteDto note, HashMap<String, Object> model, @RequestParam(value = "patient") Long patientId) {
+    public String editNotePost(@Valid NoteDto note, HashMap<String, Object> model, @RequestParam(value = "patient") Long patientId, @RequestParam("currentFolder") Long currentFolder) {
+        note.setFolderDto(folderService.getFolderById(currentFolder));
         NoteDto noteFromDb = noteService.getNoteByNameAndFolder(note.getName(), note.getFolderDto());
 
         if (noteFromDb != null && noteFromDb.getId() != noteFromDb.getId()) {
             model.put("note", note);
-            model.put("folderModel", currentFolder);
+            model.put("folderModel", folderService.getFolderById(currentFolder));
             return "redirect:/doctor/folders/editNote";
         }
 
-        note.setFolderDto(currentFolder);
+        note.setFolderDto(folderService.getFolderById(currentFolder));
         note.setPatientDto(patientService.getPatientById(patientId));
 
         noteService.createOrUpdateNote(note);
-        return "redirect:/doctor/folders";
+        return "redirect:/doctor/folders/" + currentFolder;
     }
 
     @GetMapping("/editNote/{noteId}")
-    public String editNote(@PathVariable(value = "noteId") Long noteId, HashMap<String, Object> model) {
+    public String editNote(@PathVariable(value = "noteId") Long noteId, HashMap<String, Object> model, @RequestParam("currentFolder") Long currentFolder) {
         model.put("note", noteService.getNoteById(noteId));
-        model.put("folder", currentFolder);
+        model.put("folder", folderService.getFolderById(currentFolder));
         return "editNote";
     }
 
     @DeleteMapping("/deleteNote/{noteId}")
-    public String deleteNote(@PathVariable(value = "noteId") Long noteId) {
+    public String deleteNote(@PathVariable(value = "noteId") Long noteId, @RequestParam("currentFolder") Long currentFolder) {
+        FolderDto folder = folderService.getFolderById(currentFolder);
         noteService.deleteNoteById(noteId);
-        currentFolder.setNotesDto(noteService.getNotesByFolderOrderByPatientAscUpdateDateDesc(currentFolder));
-        return "redirect:/doctor/folders/";
+        folder.setNotesDto(noteService.getNotesByFolderOrderByPatientAscUpdateDateDesc(folder));
+        return "redirect:/doctor/folders/" + currentFolder;
     }
 
     @PostMapping("/createNote")
-    public String createNote(@Valid NoteDto note, @RequestParam(value = "patient") Long patientId) {
-        note.setFolderDto(currentFolder);
+    public String createNote(@Valid NoteDto note, @RequestParam(value = "patient") Long patientId, @RequestParam("currentFolder") Long currentFolder) {
+        note.setFolderDto(folderService.getFolderById(currentFolder));
         note.setPatientDto(patientService.getPatientById(patientId));
         noteService.createOrUpdateNote(note);
-        return "redirect:/doctor/folders";
+        return "redirect:/doctor/folders/" + currentFolder;
     }
 
     @GetMapping("/notes")
-    public String getAllNotes(HashMap<String, Object> model) {
+    public String getAllNotes(HashMap<String, Object> model, @RequestParam("currentFolder") Long currentFolder) {
         model.put("notes", noteService.getAllNotes());
+        model.put("currentFolder", folderService.getFolderById(currentFolder));
         return "notes";
     }
 
-    private void setCurrentFolder(FolderDto nextFolder){
-        currentFolder = nextFolder;
-    }
-    private void setCurrentFolder(){
-        if(currentFolder == null){
-            currentFolder = folderService.getFolderByName("root");
-        }
+    private FolderDto getRoot(){
+        return folderService.getFolderByName("root");
     }
 
-    private Long getParent(){
-        FolderDto root = folderService.getFolderByName("root");
+    private Long getParent(FolderDto currentFolder){
         if(currentFolder.getParentFolderDto() != null){
             return currentFolder.getParentFolderDto().getId();
         } else{
-            return root.getId();
+            return getRoot().getId();
         }
     }
 
-    private List<Note> getNotes(Map<String, String> form) {
+    private List<Note> getNotes(Map<String, String> form, FolderDto currentFolder) {
         List notes;
         if (form.get("patient") != null && !form.get("patient").equals("")) {
             PatientDto patient = patientService.getPatientById(Long.valueOf(form.get("patient")));

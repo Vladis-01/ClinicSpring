@@ -4,6 +4,7 @@ import com.example.clinicspring.spring.DTO.PatientDto;
 import com.example.clinicspring.spring.enums.Role;
 import com.example.clinicspring.spring.mappings.MappingPatients;
 import com.example.clinicspring.spring.repositories.PatientRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,16 +18,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PatientService implements UserDetailsService {
     private final PatientRepo patientRepo;
     private final MappingPatients mappingPatients;
     private final PasswordEncoder passwordEncoder;
-
-    public PatientService(PatientRepo patientRepo, MappingPatients mappingPatients, PasswordEncoder passwordEncoder) {
-        this.patientRepo = patientRepo;
-        this.mappingPatients = mappingPatients;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

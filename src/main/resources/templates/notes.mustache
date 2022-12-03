@@ -62,6 +62,7 @@
             <td>{{folderDto.path}}/{{folderDto.name}}</td>
             <td>
                 <form action="/doctor/folders/editNote/{{id}}" method="get">
+                    <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
                     <div><input type="submit" value="Open" class="btn btn-primary"/></div>
                 </form>
             </td>

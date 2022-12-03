@@ -7,6 +7,7 @@ import com.example.clinicspring.spring.mappings.MappingFolder;
 import com.example.clinicspring.spring.mappings.MappingNotes;
 import com.example.clinicspring.spring.mappings.MappingPatients;
 import com.example.clinicspring.spring.repositories.NoteRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,18 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NoteService {
     private final NoteRepo noteRepo;
     private final MappingNotes mappingNotes;
     private final MappingPatients mappingPatients;
     private final MappingFolder mappingFolder;
-
-    public NoteService(NoteRepo noteRepo, MappingNotes mappingNotes, MappingPatients mappingPatients, MappingFolder mappingFolder) {
-        this.noteRepo = noteRepo;
-        this.mappingNotes = mappingNotes;
-        this.mappingPatients = mappingPatients;
-        this.mappingFolder = mappingFolder;
-    }
 
     @Transactional
     public void createOrUpdateNote(NoteDto note){

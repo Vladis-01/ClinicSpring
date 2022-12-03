@@ -84,18 +84,15 @@
                 <td>{{path}}</td>
                 <td>
                     <form action="/doctor/folders/{{id}}" method="get">
+                        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
                         <div><input type="submit" value="Open" class="btn btn-primary"/></div>
-                    </form>
-                </td>
-                <td>
-                    <form action="/doctor/folders/{{id}}" method="get">
-                        <div><input type="submit" value="Edit" class="btn btn-primary"/></div>
                     </form>
                 </td>
                 <td>
                     <form action="/doctor/folders/{{id}}" method="post">
                         <input type="hidden" name="_method" value="delete" wfd_invisible="true">
                         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+                        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
                         <input type="submit" value="Delete" class="btn btn-primary"/>
                     </form>
                 </td>
@@ -110,6 +107,7 @@
     </form>
 
     <form action="/doctor/folders/notes" method="get">
+        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
         <div><button type="submit" class="btn-primary bigBtn">All notes</button></div>
     </form>
 
@@ -142,11 +140,13 @@
                 <td>{{folderDto.path}}/{{folderDto.name}}</td>
                 <td>
                     <form action="/doctor/folders/editNote/{{id}}" method="get">
+                        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
                         <div><input type="submit" value="Open" class="btn btn-primary"/></div>
                     </form>
                 </td>
                 <td>
                     <form action="/doctor/folders/deleteNote/{{id}}" method="post">
+                        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
                         <div><input type="submit" value="Delete" class="btn btn-primary"/></div>
                         <input type="hidden" name="_method" value="delete" wfd_invisible="true">
                         <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>

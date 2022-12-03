@@ -51,13 +51,14 @@
 <h1 class="h42">Create folder</h1>
 
 <div class="center">
-    <form name="folder" action="/doctor/folders/createFolder" method="post">
+    <form name="folderDto" action="/doctor/folders/createFolder" method="post">
         <div><input type="text" name="name" minlength="1" required placeholder="Folder name" class="bigInput"/></div>
+        <input type="hidden" value="{{currentFolder.id}}" name="currentFolder">
         <div><button type="submit" class="btn-primary bigBtn">Create</button></div>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     </form>
 
-    <form action="/doctor/folders" method="get">
+    <form action="/doctor/folders/{{currentFolder.id}}" method="get">
         <div><button type="submit" class="btn-primary bigBtn">Back</button></div>
     </form>
 </div>

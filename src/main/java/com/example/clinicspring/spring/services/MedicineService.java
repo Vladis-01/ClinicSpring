@@ -5,21 +5,17 @@ import com.example.clinicspring.spring.DTO.MedicineDto;
 import com.example.clinicspring.spring.mappings.MappingAppointment;
 import com.example.clinicspring.spring.mappings.MappingMedicines;
 import com.example.clinicspring.spring.repositories.MedicineRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class MedicineService {
     private final MedicineRepo medicineRepo;
     private final MappingMedicines mappingMedicines;
 
     private final MappingAppointment mappingAppointment;
-
-    public MedicineService(MedicineRepo medicineRepo, MappingMedicines mappingMedicines, MappingAppointment mappingAppointment) {
-        this.medicineRepo = medicineRepo;
-        this.mappingMedicines = mappingMedicines;
-        this.mappingAppointment = mappingAppointment;
-    }
 
     @Transactional
     public void createOrUpdateMedicine(MedicineDto medicineDto){

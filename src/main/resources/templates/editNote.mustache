@@ -60,14 +60,15 @@
             </select>
         </label><br>
         <div><textarea name="text" minlength="1" required class="textarea">{{note.text}}</textarea></div>
-        <input type="hidden" name="folder" value="{{folder.id}}" />
+        <input type="hidden" value="{{folder.id}}" name="currentFolder">
         <input type="hidden" value="{{note.id}}" name="id">
 
         <div><input type="submit" value="Save" class="btn btn-primary bigBtn"/></div>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
     </form>
 
-    <form action="/doctor/folders" method="get">
+    <form action="/doctor/folders/{{folder.id}}" method="get">
+        <input type="hidden" value="{{folder.id}}" name="currentFolder">
         <div><input type="submit" value="Back" class="btn btn-primary bigBtn"/></div>
     </form>
 

@@ -3,6 +3,7 @@ package com.example.clinicspring.spring.controllers;
 import com.example.clinicspring.spring.DTO.PatientDto;
 import com.example.clinicspring.spring.services.AppointmentService;
 import com.example.clinicspring.spring.services.PatientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +15,11 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/doctor/patients")
+@RequiredArgsConstructor
 @Transactional
 public class PatientController {
     private final PatientService patientService;
     private final AppointmentService appointmentService;
-
-    public PatientController(PatientService patientService, AppointmentService appointmentService) {
-        this.patientService = patientService;
-        this.appointmentService = appointmentService;
-    }
 
     @GetMapping("/createPatient")
     public String createPatient() {

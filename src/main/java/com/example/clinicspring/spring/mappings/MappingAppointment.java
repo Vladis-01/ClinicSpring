@@ -48,6 +48,7 @@ public class MappingAppointment {
     //из dto в entity
     public Appointment mapToAppointmentEntity(AppointmentDto dto){
         Appointment appointment = modelMapper.map(dto, Appointment.class);
+        appointment.setStatus(dto.getStatus());
 
         return appointment;
     }

@@ -5,6 +5,7 @@ import com.example.clinicspring.spring.enums.Role;
 import com.example.clinicspring.spring.entities.Doctor;
 import com.example.clinicspring.spring.entities.Patient;
 import com.example.clinicspring.spring.services.PatientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,12 +18,9 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
     private final PatientService patientService;
-
-    public AuthController(PatientService patientService) {
-        this.patientService = patientService;
-    }
 
     @GetMapping("/login")
     public String login() {

@@ -4,6 +4,7 @@ import com.example.clinicspring.spring.DTO.DoctorDto;
 import com.example.clinicspring.spring.enums.Position;
 import com.example.clinicspring.spring.enums.Role;
 import com.example.clinicspring.spring.services.DoctorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,14 +16,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @PreAuthorize("hasAnyAuthority('ADMIN')")
+@RequiredArgsConstructor
 @RequestMapping("/doctor/doctors")
 @Controller
 public class DoctorController {
     private final DoctorService doctorService;
-
-    public DoctorController(DoctorService doctorService) {
-        this.doctorService = doctorService;
-    }
 
     @GetMapping("/createDoctor")
     public String createDoctor(HashMap<String, Object> model) {

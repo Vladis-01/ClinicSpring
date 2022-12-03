@@ -3,6 +3,7 @@ package com.example.clinicspring.spring.services;
 import com.example.clinicspring.spring.DTO.FolderDto;
 import com.example.clinicspring.spring.mappings.MappingFolder;
 import com.example.clinicspring.spring.repositories.FolderRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,14 +11,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FolderService {
     private final MappingFolder mappingFolder;
     private final FolderRepo folderRepo;
-
-    public FolderService(MappingFolder mappingFolder, FolderRepo folderRepo) {
-        this.mappingFolder = mappingFolder;
-        this.folderRepo = folderRepo;
-    }
 
     @Transactional
     public void createOrUpdateFolder(FolderDto folder){

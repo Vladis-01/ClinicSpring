@@ -10,6 +10,7 @@ import com.example.clinicspring.spring.enums.Status;
 import com.example.clinicspring.spring.services.AppointmentService;
 import com.example.clinicspring.spring.services.DoctorService;
 import com.example.clinicspring.spring.services.PatientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/patient")
 public class PatientAccountController {
     private final PatientService patientService;
@@ -44,13 +46,6 @@ public class PatientAccountController {
 
     @Value("${rlsr.urlGetInventory}")
     private String urlRlsrGetInventory;
-
-    public PatientAccountController(PatientService patientService, AppointmentService appointmentService, DoctorService doctorService, PasswordEncoder passwordEncoder) {
-        this.patientService = patientService;
-        this.appointmentService = appointmentService;
-        this.doctorService = doctorService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @GetMapping("/editPatient")
     public String editPatient(@AuthenticationPrincipal Patient currentPatient, HashMap<String, Object> model) {
