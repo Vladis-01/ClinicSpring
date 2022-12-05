@@ -1,7 +1,6 @@
 package com.example.clinicspring.spring.entities;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.Set;
 @Table(name="folders")
 public class Folder {
 
-    @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -2,7 +2,6 @@ package com.example.clinicspring.spring.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -11,7 +10,6 @@ import java.time.Instant;
 @Entity
 @Table(name="files")
 public class Note {
-    @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

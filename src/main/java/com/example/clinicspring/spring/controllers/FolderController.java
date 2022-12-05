@@ -9,6 +9,7 @@ import com.example.clinicspring.spring.entities.Note;
 import com.example.clinicspring.spring.services.FolderService;
 import com.example.clinicspring.spring.services.NoteService;
 import com.example.clinicspring.spring.services.PatientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +20,11 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/doctor/folders")
-
+@RequiredArgsConstructor
 public class FolderController {
     private final FolderService folderService;
     private final PatientService patientService;
     private final NoteService noteService;
-
-    public FolderController(FolderService folderService, PatientService patientService, NoteService noteService) {
-        this.folderService = folderService;
-        this.patientService = patientService;
-        this.noteService = noteService;
-    }
 
     @GetMapping(value={"", "/{nextFolder}"})
     public String getFolders(@PathVariable(required = false) Long nextFolder, @RequestParam  Map<String, String> form, HashMap<String, Object> model) {
