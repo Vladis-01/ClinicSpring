@@ -50,6 +50,7 @@ public class PatientAccountController {
     @GetMapping("/editPatient")
     public String editPatient(@AuthenticationPrincipal Patient currentPatient, HashMap<String, Object> model) {
         model.put("patient", currentPatient);
+        model.put("passwordMessage", "");
         return "editPatient";
     }
     @PostMapping("/editPatient")

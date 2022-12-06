@@ -51,11 +51,12 @@ public class PatientService implements UserDetailsService {
 
     @Transactional
     public void createOrUpdatePatient(PatientDto patientDto){
-        if (patientDto.getId() == null && patientDto.getPassword() == null){
-            patientDto.setPassword(passwordEncoder.encode(""));
-            patientDto.setDateRegistration(new Date());
-        } else {
+        if(patientDto.getPassword() == null){
+            patientDto.setPassword("");
+        }
+        if (patientDto.getId() == null){
             patientDto.setPassword(passwordEncoder.encode(patientDto.getPassword()));
+            patientDto.setDateRegistration(new Date());
         }
 
         patientDto.setRole(Collections.singleton(Role.USER));
